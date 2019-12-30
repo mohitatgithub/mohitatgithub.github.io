@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Beautiful Jekyll | MIT license | Copyright Dean Attali 2016 -->
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Machine Learning with Iris Dataset</title>
+
+  <meta name="author" content="Mohit Rathore" />
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Blog - Mohit Rathore" href="/feed.xml" />
+
+  
+
+  
+    
+      
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css" />
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    
+      <link rel="stylesheet" href="/css/bootstrap-social.css" />
+    
+      <link rel="stylesheet" href="/css/main.css" />
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+    
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+    
+  
+
+  
+
+  
+
+  
+
+    <!-- Facebook OpenGraph tags -->
+  
+
+  
+  <meta property="og:title" content="Machine Learning with Iris Dataset" />
+  
+
+   
+  <meta property="og:description" content="Image Source Exploratory Data Analysis dim(iris) #Checking dimensions, iris data have 150 observations &amp;amp; 6 features ## [1] 150 6 Checking count of each species table(iris$Species) #Have equal number of each ## ## Iris-setosa Iris-versicolor Iris-virginica ## 50 50 50 Checking iris dataset summary summary(iris) #Checking data summary, there are...">
+  
+
+
+  <meta property="og:type" content="website" />
+
+  
+  <meta property="og:url" content="http://mohitatgithub.github.io/2018-02-16-Machine-Learning-with-Iris-dataset/" />
+  <link rel="canonical" href="http://mohitatgithub.github.io/2018-02-16-Machine-Learning-with-Iris-dataset/" />
+  
+
+  
+
+
+  <!-- Twitter summary cards -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@" />
+  <meta name="twitter:creator" content="@" />
+
+  
+  <meta name="twitter:title" content="Machine Learning with Iris Dataset" />
+  
+
+  
+  <meta name="twitter:description" content="Image Source Exploratory Data Analysis dim(iris) #Checking dimensions, iris data have 150 observations &amp;amp; 6 features ## [1] 150 6 Checking count of each species table(iris$Species) #Have equal number of each ## ## Iris-setosa Iris-versicolor Iris-virginica ## 50 50 50 Checking iris dataset summary summary(iris) #Checking data summary, there are...">
+  
+
+  
+
+  
+
+</head>
+
+
+  <body>
+
+    
+  
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+        <a class="navbar-brand" href="http://mohitatgithub.github.io">Blog</a>
+      
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+            
+
+
+
+
+
+
+<a href="/aboutme">About Me</a>
+
+          </li>
+        
+        
+      </ul>
+    </div>
+
+	
+
+  </div>
+</nav>
+
+
+    <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Machine Learning with Iris Dataset</h1>
+		  
+		  
+		  
+		  <span class="post-meta">Posted on February 16, 2018</span>
+		  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+      
+
+      <article role="main" class="blog-post">
+        <center><img src="/Images/Blog/iris.jpg" width="520" height="350" />
+<br />
+<a href="https://commons.wikimedia.org/wiki/File:Iris_latifolia-Lac_Aule-Laruns-2522~2013_07_29.JPG">Image Source</a>
+</center>
+
+<h3 id="exploratory-data-analysis">Exploratory Data Analysis</h3>
+<hr />
+
+<div class="highlighter-rouge"><pre class="highlight"><code>dim(iris)  #Checking dimensions, iris data have 150 observations &amp; 6 features
+
+## [1] 150   6
+</code></pre>
+</div>
+
+<h3 id="checking-count-of-each-species">Checking count of each species</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>table(iris$Species) #Have equal number of each
+
+##
+##     Iris-setosa Iris-versicolor  Iris-virginica
+##              50              50              50
+</code></pre>
+</div>
+
+<h3 id="checking-iris-dataset-summary">Checking iris dataset summary</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>summary(iris) #Checking data summary, there are no missing values in data
+
+##        Id         SepalLengthCm    SepalWidthCm   PetalLengthCm  
+##  Min.   :  1.00   Min.   :4.300   Min.   :2.000   Min.   :1.000  
+##  1st Qu.: 38.25   1st Qu.:5.100   1st Qu.:2.800   1st Qu.:1.600  
+##  Median : 75.50   Median :5.800   Median :3.000   Median :4.350  
+##  Mean   : 75.50   Mean   :5.843   Mean   :3.054   Mean   :3.759  
+##  3rd Qu.:112.75   3rd Qu.:6.400   3rd Qu.:3.300   3rd Qu.:5.100  
+##  Max.   :150.00   Max.   :7.900   Max.   :4.400   Max.   :6.900  
+##   PetalWidthCm              Species  
+##  Min.   :0.100   Iris-setosa    :50  
+##  1st Qu.:0.300   Iris-versicolor:50  
+##  Median :1.300   Iris-virginica :50  
+##  Mean   :1.199                       
+##  3rd Qu.:1.800                       
+##  Max.   :2.500
+</code></pre>
+</div>
+
+<h3 id="checking-iris-dataset-structure">Checking Iris dataset structure</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>str(iris) #Iris data have 4 key flower features as numeric type corresponding to 3 Species: setosa,versicolor,virginica
+
+## 'data.frame':    150 obs. of  6 variables:
+##  $ Id           : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ SepalLengthCm: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
+##  $ SepalWidthCm : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
+##  $ PetalLengthCm: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
+##  $ PetalWidthCm : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
+##  $ Species      : Factor w/ 3 levels "Iris-setosa",..: 1 1 1 1 1 1 1 1 1 1 ...
+</code></pre>
+</div>
+
+<h3 id="checking-for-outliers">Checking for outliers</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>boxplot(iris$SepalLengthCm,iris$SepalWidthCm,iris$PetalLengthCm,iris$PetalWidthCm)
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-6-1.png" alt="" /></p>
+
+<h3 id="checking-outliers-in-sepalwidth">Checking outliers in SepalWidth</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ggplot(iris, aes(x=SepalWidthCm, y=Id, color=Species)) + geom_point()
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-7-1.png" alt="" /></p>
+
+<h3 id="average-length--width-by-species">Average length &amp; width by species</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>temp_df &lt;- iris %&gt;% group_by(Species) %&gt;% summarize(mean(SepalLengthCm),mean(SepalWidthCm),mean(PetalLengthCm),mean(PetalWidthCm))
+kable(temp_df,align = 'c',col.names = c('Species','Avg Sepal Length','Avg Sepal Width','Avg Petal Length','Avg Petal Width'))
+</code></pre>
+</div>
+
+<table>
+<thead>
+<tr class="header">
+<th align="center">Species</th>
+<th align="center">Avg Sepal Length</th>
+<th align="center">Avg Sepal Width</th>
+<th align="center">Avg Petal Length</th>
+<th align="center">Avg Petal Width</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Iris-setosa</td>
+<td align="center">5.006</td>
+<td align="center">3.418</td>
+<td align="center">1.464</td>
+<td align="center">0.244</td>
+</tr>
+<tr class="even">
+<td align="center">Iris-versicolor</td>
+<td align="center">5.936</td>
+<td align="center">2.770</td>
+<td align="center">4.260</td>
+<td align="center">1.326</td>
+</tr>
+<tr class="odd">
+<td align="center">Iris-virginica</td>
+<td align="center">6.588</td>
+<td align="center">2.974</td>
+<td align="center">5.552</td>
+<td align="center">2.026</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="scatter-plot-between-sepel-length--sepel-width">Scatter plot between Sepel Length &amp; Sepel Width:</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#plot(iris$SepalLengthCm,iris$SepalWidthCm)
+ggplot(iris, aes(x=SepalLengthCm, y=SepalWidthCm, color=Species)) + geom_point() + labs(title="Scatterplot", x="Sepal Length", y="Sepal Width")
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-9-1.png" alt="" /></p>
+
+<h3 id="scatter-plot-between-petal-length--petal-width">Scatter plot between Petal Length &amp; Petal Width:</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ggplot(iris, aes(x=PetalLengthCm, y=PetalWidthCm, color=Species)) + geom_point() + labs(title="Scatterplot", x="Petal Length", y="Petal Width")
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-10-1.png" alt="" /></p>
+
+<h3 id="plotting-all-numeric-features">Plotting all numeric features</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ggpairs(data=iris,columns=2:5,title="Iris Flower Features",colour='Species')
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-11-1.png" alt="" /></p>
+
+<h3 id="including-density-in-plots">Including Density in plots</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ggpairs(data=iris,
+             columns=2:5,
+             upper = list(continuous = "density"),
+             lower = list(combo = "facetdensity"),
+             colour = "Species")
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-12-1.png" alt="" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>pairs(iris[,1:4], col=iris$Species) #Trying pairs to get distinct colours for each cluster
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-13-1.png" alt="" /></p>
+
+<h3 id="3d-visualisation-with-4-features">3D visualisation with 4 features:</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>colors &lt;- c("#BB0000", "#00FFFF", "#7FFF00")
+colors &lt;- colors[as.numeric(iris$Species)]
+scatterplot3d(iris[,2:4], pch=20, color=colors,grid=TRUE, box=FALSE,angle =80,xlab="Sepal Length", ylab="Sepal Width", zlab="Petal Length")
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-14-1.png" alt="" /></p>
+
+<h3 id="sepal-dimensions-variation-across-dataset">Sepal Dimensions Variation across dataset</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>p1&lt;-ggplot(iris, aes(x=Id, y=SepalWidthCm, color=Species)) + geom_point() + geom_smooth()
+p2&lt;-ggplot(iris, aes(x=Id, y=SepalLengthCm, color=Species)) + geom_point() + geom_smooth()
+grid.arrange(p1, p2, nrow=2)
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-15-1.png" alt="" /></p>
+
+<h3 id="petal-dimensions-variation-across-dataset">Petal Dimensions Variation across dataset</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>p3&lt;-ggplot(iris, aes(x=Id, y=PetalWidthCm, color=Species)) + geom_point() + geom_smooth()
+p4&lt;-ggplot(iris, aes(x=Id, y=PetalLengthCm, color=Species)) + geom_point() + geom_smooth()
+grid.arrange(p3, p4, nrow=2)
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-16-1.png" alt="" /></p>
+
+<h3 id="checking-pearson-correlation-heat-map-among-numeric-features">Checking Pearson Correlation heat map among numeric features:</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>heat-map #check rmd code for details
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-18-1.png" alt="" /></p>
+
+<h2 id="testing-different-machine-learning-algorithms-on-iris-dataset">Testing different machine learning algorithms on iris dataset</h2>
+
+<h2 id="1applying-k-means-clustering">1.Applying k-means clustering</h2>
+
+<h3 id="removing-id-as-its-not-required-for-analysis">Removing Id as its not required for analysis</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>iris&lt;-iris[,-c(1)]
+
+iris_subset &lt;-iris #Creating data subset for clustering
+clus1 &lt;- kmeans(iris_subset[,-c(5)], centers = 3, iter.max = 50, nstart = 50)
+
+iris_subset &lt;- cbind(iris_subset,clus1$cluster)
+
+iris_subset$`clus1$cluster`&lt;-as.factor(iris_subset$`clus1$cluster`)
+colnames(iris_subset)[5]&lt;- "ClusterID"
+ggplot(iris_subset, aes(x=PetalLengthCm, y=PetalWidthCm, color=ClusterID)) + geom_point()
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-22-1.png" alt="" /></p>
+
+<h2 id="2applying-decision-trees">2.Applying Decision Trees</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>iris_subset &lt;-iris #Creating data subset for classification
+
+#Dividing data in train &amp; test samples
+set.seed(123)
+split.indices &lt;- sample(nrow(iris_subset), nrow(iris_subset)*0.8, replace = F)
+train &lt;- iris_subset[split.indices, ]
+test &lt;- iris_subset[-split.indices, ]
+
+tree.model &lt;- rpart(Species ~ .,data = train,method = "class",parms = list(split = "information"))
+prp(tree.model)
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-24-1.png" alt="" /></p>
+
+<h3 id="making-predictions-on-test-set-using-decision-tree-model">Making predictions on test set using decision tree model:</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>tree.predict &lt;- predict(tree.model, test[,-c(5)], type = "class")
+confusionMatrix(test$Species, tree.predict)
+
+## Confusion Matrix and Statistics
+##
+##                  Reference
+## Prediction        Iris-setosa Iris-versicolor Iris-virginica
+##   Iris-setosa               8               0              0
+##   Iris-versicolor           0               9              0
+##   Iris-virginica            0               1             12
+##
+## Overall Statistics
+##                                           
+##                Accuracy : 0.9667          
+##                  95% CI : (0.8278, 0.9992)
+##     No Information Rate : 0.4             
+##     P-Value [Acc &gt; NIR] : 5.303e-11       
+##                                           
+##                   Kappa : 0.9492          
+##  Mcnemar's Test P-Value : NA              
+##
+## Statistics by Class:
+##
+##                      Class: Iris-setosa Class: Iris-versicolor
+## Sensitivity                      1.0000                 0.9000
+## Specificity                      1.0000                 1.0000
+## Pos Pred Value                   1.0000                 1.0000
+## Neg Pred Value                   1.0000                 0.9524
+## Prevalence                       0.2667                 0.3333
+## Detection Rate                   0.2667                 0.3000
+## Detection Prevalence             0.2667                 0.3000
+## Balanced Accuracy                1.0000                 0.9500
+##                      Class: Iris-virginica
+## Sensitivity                         1.0000
+## Specificity                         0.9444
+## Pos Pred Value                      0.9231
+## Neg Pred Value                      1.0000
+## Prevalence                          0.4000
+## Detection Rate                      0.4000
+## Detection Prevalence                0.4333
+## Balanced Accuracy                   0.9722
+</code></pre>
+</div>
+
+<h2 id="3applying-hierarchical-clustering">3.Applying Hierarchical Clustering</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>iris_subset &lt;-iris #Creating data subset for clustering
+
+iris_dist &lt;- dist(iris_subset[,-c(5)]) #calculating distance matrix for features
+iris_hclust1&lt;- hclust(iris_dist, method="complete")
+plot(iris_hclust1)
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-26-1.png" alt="" /></p>
+
+<h3 id="colored-marking-of-3-main-clusters">Colored marking of 3 main clusters</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>clus_cut&lt;-cutree(iris_hclust1, 3)
+ColorDendrogram(iris_hclust1, y=clus_cut, labels = names(clus_cut), branchlength = 80)
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-27-1.png" alt="" /></p>
+
+<h3 id="getting-3-main-clusters--plotting-them">Getting 3 main clusters &amp; plotting them:</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>clusterCut &lt;- cutree(iris_hclust1, k=3)
+iris_subset &lt;-cbind(iris,clusterCut)
+colnames(iris_subset)[6]&lt;- "ClusterID"
+
+iris_subset$ClusterID&lt;-as.factor(iris_subset$ClusterID)
+ggplot(iris_subset, aes(x=PetalLengthCm, y=PetalWidthCm, color=ClusterID)) + geom_point()
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-28-1.png" alt="" /></p>
+
+<h2 id="4applying-k-nearest-neighbor-algorithm">4.Applying K Nearest Neighbor Algorithm</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>iris_knn_pred &lt;- knn(train = train[,-c(5)], test[,-c(5)], cl= train$Species,k = 3,prob=TRUE)
+confusionMatrix(test$Species, iris_knn_pred)
+
+## Confusion Matrix and Statistics
+##
+##                  Reference
+## Prediction        Iris-setosa Iris-versicolor Iris-virginica
+##   Iris-setosa               8               0              0
+##   Iris-versicolor           0               9              0
+##   Iris-virginica            0               1             12
+##
+## Overall Statistics
+##                                           
+##                Accuracy : 0.9667          
+##                  95% CI : (0.8278, 0.9992)
+##     No Information Rate : 0.4             
+##     P-Value [Acc &gt; NIR] : 5.303e-11       
+##                                           
+##                   Kappa : 0.9492          
+##  Mcnemar's Test P-Value : NA              
+##
+## Statistics by Class:
+##
+##                      Class: Iris-setosa Class: Iris-versicolor
+## Sensitivity                      1.0000                 0.9000
+## Specificity                      1.0000                 1.0000
+## Pos Pred Value                   1.0000                 1.0000
+## Neg Pred Value                   1.0000                 0.9524
+## Prevalence                       0.2667                 0.3333
+## Detection Rate                   0.2667                 0.3000
+## Detection Prevalence             0.2667                 0.3000
+## Balanced Accuracy                1.0000                 0.9500
+##                      Class: Iris-virginica
+## Sensitivity                         1.0000
+## Specificity                         0.9444
+## Pos Pred Value                      0.9231
+## Neg Pred Value                      1.0000
+## Prevalence                          0.4000
+## Detection Rate                      0.4000
+## Detection Prevalence                0.4333
+## Balanced Accuracy                   0.9722
+</code></pre>
+</div>
+
+<h2 id="5applying-naive-bayes-algorithm">5.Applying Naive Bayes Algorithm</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>iris_nb = train(iris[,-c(5)],iris$Species,'nb',trControl=trainControl(method='cv',number=10))
+iris_nb
+
+## Naive Bayes
+##
+## 150 samples
+##   4 predictor
+##   3 classes: 'Iris-setosa', 'Iris-versicolor', 'Iris-virginica'
+##
+## No pre-processing
+## Resampling: Cross-Validated (10 fold)
+## Summary of sample sizes: 135, 135, 135, 135, 135, 135, ...
+## Resampling results across tuning parameters:
+##
+##   usekernel  Accuracy   Kappa
+##   FALSE      0.9466667  0.92
+##    TRUE      0.9533333  0.93
+##
+## Tuning parameter 'fL' was held constant at a value of 0
+## Tuning
+##  parameter 'adjust' was held constant at a value of 1
+## Accuracy was used to select the optimal model using  the largest value.
+## The final values used for the model were fL = 0, usekernel = TRUE
+##  and adjust = 1.
+
+table(predict(iris_nb$finalModel,test[,-c(6)])$class,test$Species)
+
+##                  
+##                   Iris-setosa Iris-versicolor Iris-virginica
+##   Iris-setosa               8               0              0
+##   Iris-versicolor           0               9              1
+##   Iris-virginica            0               0             12
+</code></pre>
+</div>
+
+<h2 id="6applying-support-vector-machine-algorithm">6.Applying Support Vector Machine Algorithm</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>svm_model &lt;- svm(Species ~ ., data=train)
+summary(svm_model)
+
+##
+## Call:
+## svm(formula = Species ~ ., data = train)
+##
+##
+## Parameters:
+##    SVM-Type:  C-classification
+##  SVM-Kernel:  radial
+##        cost:  1
+##       gamma:  0.25
+##
+## Number of Support Vectors:  47
+##
+##  ( 7 19 21 )
+##
+##
+## Number of Classes:  3
+##
+## Levels:
+##  Iris-setosa Iris-versicolor Iris-virginica
+</code></pre>
+</div>
+
+<h3 id="making-predictions-on-test-data">Making predictions on test data:</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>svm_pred &lt;- predict(svm_model,test[,-c(5)])
+table(svm_pred,test[,c(5)])
+
+##                  
+## svm_pred          Iris-setosa Iris-versicolor Iris-virginica
+##   Iris-setosa               8               0              0
+##   Iris-versicolor           0               9              1
+##   Iris-virginica            0               0             12
+</code></pre>
+</div>
+
+<p><em>Thanks for reviewing my work, I am a novice in data analysis &amp; still
+learning, so please provide your valuable feedback on errors &amp;
+improvements</em></p>
+
+      </article>
+
+      
+        <div class="blog-tags">
+          Tags:
+          
+          
+            <a href="/tags#R">R</a>
+          
+            <a href="/tags#EDA">EDA</a>
+          
+            <a href="/tags#Machine Learning">Machine Learning</a>
+          
+          
+        </div>
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+  <!--- Share on Twitter -->
+    <a href="https://twitter.com/intent/tweet?text=Machine+Learning+with+Iris+Dataset+http://mohitatgithub.github.io/2018-02-16-Machine-Learning-with-Iris-dataset/"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fa fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+
+  
+  <!--- Share on Google Plus -->
+    <a href="https://plus.google.com/share?url=http://mohitatgithub.github.io/2018-02-16-Machine-Learning-with-Iris-dataset/"
+      class="btn btn-social-icon btn-google" title="Share on Google+">
+      <span class="fa fa-fw fa-google-plus" aria-hidden="true"></span>
+      <span class="sr-only">Google+</span>
+    </a>
+  
+
+  
+  <!--- Share on LinkedIn -->
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://mohitatgithub.github.io/2018-02-16-Machine-Learning-with-Iris-dataset/"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fa fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pager blog-pager">
+        
+        
+        <li class="next">
+          <a href="/2018-02-19-Jazz-Musicians-Collaboration-Graph-Analysis/" data-toggle="tooltip" data-placement="top" title="Jazz Musician Collaborations Graph Analysis using NetworkX">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+        <div class="disqus-comments">
+          <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'mohitrathore';
+        /* ensure that pages with query string get the same discussion */
+            var url_parts = window.location.href.split("?");
+            var disqus_url = url_parts[0];
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+
+    <footer>
+  <div class="container beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links"><li><a href="/feed.xml" title="RSS"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">RSS</span>
+              </a>
+            </li><li><a href="mailto:mohitr1729@gmail.com" title="Email me"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Email me</span>
+              </a>
+            </li><li><a href="https://github.com/mohitatgithub" title="GitHub"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">GitHub</span>
+              </a>
+            </li><li><a href="https://linkedin.com/in/mohitr1729" title="LinkedIn"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">LinkedIn</span>
+              </a>
+            </li><li><a href="https://www.kaggle.com/mohitr" title="Kaggle"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-trophy fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Kaggle</span>
+              </a>
+            </li></ul>
+      <p class="copyright text-muted">
+      Mohit Rathore
+      &nbsp;&bull;&nbsp;
+      2019
+
+      
+
+      
+      </p>
+          <!-- Please don't remove this, keep my open source work credited :) -->
+    <p class="theme-by text-muted">
+      Theme by
+      <a href="http://deanattali.com/beautiful-jekyll/">beautiful-jekyll</a>
+    </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+    
+
+
+
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script>
+      	if (typeof jQuery == 'undefined') {
+      	  document.write('<script src="/js/jquery-1.11.2.min.js"></scr' + 'ipt>');
+      	}
+      </script>
+    
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+	<script src="/js/bootstrap.min.js"></script>
+    
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+	<script src="/js/main.js"></script>
+    
+  
+
+
+
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-114904532-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+	<!-- End Google Analytics -->
+
+
+  
+  </body>
+</html>

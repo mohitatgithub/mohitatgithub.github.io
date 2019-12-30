@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Beautiful Jekyll | MIT license | Copyright Dean Attali 2016 -->
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Identifying Handwritten Digits</title>
+
+  <meta name="author" content="Mohit Rathore" />
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Blog - Mohit Rathore" href="/feed.xml" />
+
+  
+
+  
+    
+      
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css" />
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    
+      <link rel="stylesheet" href="/css/bootstrap-social.css" />
+    
+      <link rel="stylesheet" href="/css/main.css" />
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+    
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+    
+  
+
+  
+
+  
+
+  
+
+    <!-- Facebook OpenGraph tags -->
+  
+
+  
+  <meta property="og:title" content="Identifying Handwritten Digits" />
+  
+
+   
+  <meta property="og:description" content="Here I will be developing a model for prediction of handwritten digits using famous MNIST dataset. I will build first model using Support Vector Machine(SVM) followed by an improved approach using Principal Component Analysis(PCA). Fetching Data #Loading train &amp;amp; test data, the datasets were obtained from kaggle: https://www.kaggle.com/c/digit-recognizer/data mnist &amp;lt;-...">
+  
+
+
+  <meta property="og:type" content="website" />
+
+  
+  <meta property="og:url" content="http://mohitatgithub.github.io/2018-02-21-Identifying-Handwritten-Digits/" />
+  <link rel="canonical" href="http://mohitatgithub.github.io/2018-02-21-Identifying-Handwritten-Digits/" />
+  
+
+  
+
+
+  <!-- Twitter summary cards -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@" />
+  <meta name="twitter:creator" content="@" />
+
+  
+  <meta name="twitter:title" content="Identifying Handwritten Digits" />
+  
+
+  
+  <meta name="twitter:description" content="Here I will be developing a model for prediction of handwritten digits using famous MNIST dataset. I will build first model using Support Vector Machine(SVM) followed by an improved approach using Principal Component Analysis(PCA). Fetching Data #Loading train &amp;amp; test data, the datasets were obtained from kaggle: https://www.kaggle.com/c/digit-recognizer/data mnist &amp;lt;-...">
+  
+
+  
+
+  
+
+</head>
+
+
+  <body>
+
+    
+  
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+        <a class="navbar-brand" href="http://mohitatgithub.github.io">Blog</a>
+      
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+            
+
+
+
+
+
+
+<a href="/aboutme">About Me</a>
+
+          </li>
+        
+        
+      </ul>
+    </div>
+
+	
+
+  </div>
+</nav>
+
+
+    <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Identifying Handwritten Digits</h1>
+		  
+		  
+		  
+		  <span class="post-meta">Posted on February 21, 2018</span>
+		  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+      
+
+      <article role="main" class="blog-post">
+        <p>Here I will be developing a model for prediction of handwritten digits
+using famous MNIST dataset. I will build first model using Support
+Vector Machine(SVM) followed by an improved approach using Principal
+Component Analysis(PCA).</p>
+
+<h3 id="fetching-data">Fetching Data</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#Loading train &amp; test data, the datasets were obtained from kaggle: https://www.kaggle.com/c/digit-recognizer/data
+mnist &lt;- read.csv("train.csv")
+mnist_test &lt;- read.csv("test.csv")
+</code></pre>
+</div>
+
+<h3 id="checking-dataset-dimensions">Checking dataset dimensions</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>dim(mnist)
+
+## [1] 42000   785
+
+#train dataset have 42000 images &amp; 785 columns(784 representing 28x28 pixels image, 1 representing image class)
+
+dim(mnist_test)
+
+## [1] 28000   784
+
+#train dataset have 28000 images &amp; 784 columns(784 representing 28x28 pixels image)
+</code></pre>
+</div>
+
+<h3 id="lets-check-distribution-percentage-of-each-digit-in-train-dataset">Lets check distribution percentage of each digit in train dataset</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>table(mnist$label)/nrow(mnist) *100
+
+##
+##         0         1         2         3         4         5         6
+##  9.838095 11.152381  9.945238 10.359524  9.695238  9.035714  9.850000
+##         7         8         9
+## 10.478571  9.673810  9.971429
+
+#Have uniform distribution of each digit
+</code></pre>
+</div>
+
+<h3 id="visualising-a-digit-in-data">Visualising a digit in data</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>digit &lt;- matrix(as.numeric(mnist[4,-1]), nrow = 28)
+image(digit, col = grey.colors(255))
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/mnist_notebook_files/figure-markdown_strict/unnamed-chunk-6-1.png" alt="" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#This is how a typical digit looks in our dataset, image is flipped
+</code></pre>
+</div>
+
+<h3 id="some-more-images-of-same-digit-to-show-the-variations-in-handwriting">Some more images of same digit to show the variations in handwriting</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mnist_copy&lt;-mnist
+
+mnist_copy_7 &lt;- mnist_copy[mnist_copy$label == 7, ]
+flip &lt;- function(matrix){
+  apply(matrix, 2, rev)
+}
+#Shows 9 diffrent ways people write digit 7
+par(mfrow=c(3,3))
+for (i in 10:18){
+  digit &lt;- flip(matrix(rev(as.numeric(mnist_copy_7[i,-c(1, 786)])), nrow = 28)) #shows different styles of digit
+  image(digit, col = grey.colors(255))
+}
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/mnist_notebook_files/figure-markdown_strict/unnamed-chunk-7-1.png" alt="" /></p>
+
+<h3 id="preparing-to-build-the-model">Preparing to build the model</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#Lets first convert our class label to factor or categorical type
+mnist$label &lt;-factor(mnist$label)
+
+#Dividing data into training &amp; validation sets
+set.seed(100)
+indices = sample.split(mnist$label, SplitRatio = 0.2)
+train = mnist[indices,]
+test = mnist[-indices,]
+</code></pre>
+</div>
+
+<h3 id="building-a-model-for-predicting-handwritten-image-using-svm">Building a model for predicting handwritten image using SVM</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#I have skipped hyper-parameter tunning here as its compute intensive
+Model_RBF &lt;- ksvm(label~., data = train, scale = FALSE, kernel = "rbfdot")
+
+## Warning in .local(x, ...): Variable(s) `' constant. Cannot scale data.
+
+Eval_RBF&lt;- predict(Model_RBF, test)
+#confusion matrix - RBF Kernel
+confusionMatrix(Eval_RBF,test$label)
+
+## Confusion Matrix and Statistics
+##
+##           Reference
+## Prediction    0    1    2    3    4    5    6    7    8    9
+##          0 4081    0   17    6    5   19   28    6    7   18
+##          1    0 4612   14   15    9    7    1   34   44   11
+##          2    8   23 4023   69   20   18    4   36   18   11
+##          3    2   14   15 4079    0   59    0    2   41   58
+##          4    6    7   27    2 3925    8   11   25   25   66
+##          5   10    6    7   79    3 3631   24    4   45   15
+##          6   13    1   10    8   13   31 4063    0   12    1
+##          7    1    5   31   23    5    4    0 4208   19   59
+##          8   10   11   28   47    1    9    6    4 3825   30
+##          9    1    4    5   23   91    9    0   82   27 3919
+##
+## Overall Statistics
+##                                           
+##                Accuracy : 0.9611          
+##                  95% CI : (0.9592, 0.9629)
+##     No Information Rate : 0.1115          
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                                           
+##                   Kappa : 0.9568          
+##  Mcnemar's Test P-Value : NA              
+##
+## Statistics by Class:
+##
+##                      Class: 0 Class: 1 Class: 2 Class: 3 Class: 4 Class: 5
+## Sensitivity           0.98766   0.9848  0.96313  0.93749  0.96390  0.95679
+## Specificity           0.99720   0.9964  0.99453  0.99493  0.99533  0.99495
+## Pos Pred Value        0.97468   0.9716  0.95106  0.95527  0.95685  0.94953
+## Neg Pred Value        0.99865   0.9981  0.99592  0.99279  0.99612  0.99570
+## Prevalence            0.09838   0.1115  0.09945  0.10360  0.09695  0.09036
+## Detection Rate        0.09717   0.1098  0.09579  0.09712  0.09345  0.08645
+## Detection Prevalence  0.09969   0.1130  0.10072  0.10167  0.09767  0.09105
+## Balanced Accuracy     0.99243   0.9906  0.97883  0.96621  0.97962  0.97587
+##                      Class: 6 Class: 7 Class: 8 Class: 9
+## Sensitivity           0.98211   0.9561  0.94142  0.93577
+## Specificity           0.99765   0.9961  0.99615  0.99360
+## Pos Pred Value        0.97856   0.9662  0.96323  0.94184
+## Neg Pred Value        0.99804   0.9949  0.99374  0.99289
+## Prevalence            0.09850   0.1048  0.09674  0.09972
+## Detection Rate        0.09674   0.1002  0.09107  0.09331
+## Detection Prevalence  0.09886   0.1037  0.09455  0.09907
+## Balanced Accuracy     0.98988   0.9761  0.96879  0.96468
+</code></pre>
+</div>
+
+<h3 id="lets-try-pca-now">Lets try PCA now</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#Reducing features using PCA
+mnist_norm&lt;-as.matrix(mnist[,-1])/255
+mnist_norm_cov &lt;- cov(mnist_norm)
+pca &lt;- prcomp(mnist_norm_cov)
+trainlabel &lt;- mnist[,1]
+
+#Checking relationship between number of Pricipal Components &amp; Variance
+vexplained &lt;- as.data.frame(pca$sdev^2/sum(pca$sdev^2))
+vexplained &lt;- cbind(c(1:784),vexplained,cumsum(vexplained[,1]))
+colnames(vexplained) &lt;- c("No_of_Principal_Components","Individual_Variance_Explained","Cumulative_Variance_Explained")
+
+#Plot between Cumulative Variance &amp; Principal Components
+plot(vexplained$No_of_Principal_Components,vexplained$Cumulative_Variance_Explained, xlim = c(0,150),type='b',pch=16,xlab = "Principal Componets",ylab = "Cumulative Variance Explained",main = 'Principal Components vs Cumulative Variance Explained')
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/mnist_notebook_files/figure-markdown_strict/unnamed-chunk-11-1.png" alt="" /></p>
+
+<h4 id="table-showing-cumulative-variance--principal-components">Table showing Cumulative Variance &amp; Principal Components</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>vexplainedsummary &lt;- vexplained[seq(0,150,5),]
+kable(vexplainedsummary)
+</code></pre>
+</div>
+
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">No_of_Principal_Components</th>
+<th align="right">Individual_Variance_Explained</th>
+<th align="right">Cumulative_Variance_Explained</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>5</td>
+<td align="right">5</td>
+<td align="right">0.0716813</td>
+<td align="right">0.7099512</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td align="right">10</td>
+<td align="right">0.0180431</td>
+<td align="right">0.8711603</td>
+</tr>
+<tr class="odd">
+<td>15</td>
+<td align="right">15</td>
+<td align="right">0.0081399</td>
+<td align="right">0.9256031</td>
+</tr>
+<tr class="even">
+<td>20</td>
+<td align="right">20</td>
+<td align="right">0.0043323</td>
+<td align="right">0.9527282</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td align="right">25</td>
+<td align="right">0.0025642</td>
+<td align="right">0.9682100</td>
+</tr>
+<tr class="even">
+<td>30</td>
+<td align="right">30</td>
+<td align="right">0.0015399</td>
+<td align="right">0.9779664</td>
+</tr>
+<tr class="odd">
+<td>35</td>
+<td align="right">35</td>
+<td align="right">0.0010429</td>
+<td align="right">0.9840624</td>
+</tr>
+<tr class="even">
+<td>40</td>
+<td align="right">40</td>
+<td align="right">0.0007112</td>
+<td align="right">0.9880982</td>
+</tr>
+<tr class="odd">
+<td>45</td>
+<td align="right">45</td>
+<td align="right">0.0004829</td>
+<td align="right">0.9909898</td>
+</tr>
+<tr class="even">
+<td>50</td>
+<td align="right">50</td>
+<td align="right">0.0003355</td>
+<td align="right">0.9929776</td>
+</tr>
+<tr class="odd">
+<td>55</td>
+<td align="right">55</td>
+<td align="right">0.0002571</td>
+<td align="right">0.9944191</td>
+</tr>
+<tr class="even">
+<td>60</td>
+<td align="right">60</td>
+<td align="right">0.0001985</td>
+<td align="right">0.9955116</td>
+</tr>
+<tr class="odd">
+<td>65</td>
+<td align="right">65</td>
+<td align="right">0.0001498</td>
+<td align="right">0.9963654</td>
+</tr>
+<tr class="even">
+<td>70</td>
+<td align="right">70</td>
+<td align="right">0.0001163</td>
+<td align="right">0.9970027</td>
+</tr>
+<tr class="odd">
+<td>75</td>
+<td align="right">75</td>
+<td align="right">0.0000902</td>
+<td align="right">0.9975132</td>
+</tr>
+<tr class="even">
+<td>80</td>
+<td align="right">80</td>
+<td align="right">0.0000663</td>
+<td align="right">0.9978984</td>
+</tr>
+<tr class="odd">
+<td>85</td>
+<td align="right">85</td>
+<td align="right">0.0000573</td>
+<td align="right">0.9982081</td>
+</tr>
+<tr class="even">
+<td>90</td>
+<td align="right">90</td>
+<td align="right">0.0000468</td>
+<td align="right">0.9984654</td>
+</tr>
+<tr class="odd">
+<td>95</td>
+<td align="right">95</td>
+<td align="right">0.0000382</td>
+<td align="right">0.9986709</td>
+</tr>
+<tr class="even">
+<td>100</td>
+<td align="right">100</td>
+<td align="right">0.0000327</td>
+<td align="right">0.9988451</td>
+</tr>
+<tr class="odd">
+<td>105</td>
+<td align="right">105</td>
+<td align="right">0.0000269</td>
+<td align="right">0.9989884</td>
+</tr>
+<tr class="even">
+<td>110</td>
+<td align="right">110</td>
+<td align="right">0.0000218</td>
+<td align="right">0.9991066</td>
+</tr>
+<tr class="odd">
+<td>115</td>
+<td align="right">115</td>
+<td align="right">0.0000188</td>
+<td align="right">0.9992046</td>
+</tr>
+<tr class="even">
+<td>120</td>
+<td align="right">120</td>
+<td align="right">0.0000161</td>
+<td align="right">0.9992906</td>
+</tr>
+<tr class="odd">
+<td>125</td>
+<td align="right">125</td>
+<td align="right">0.0000141</td>
+<td align="right">0.9993654</td>
+</tr>
+<tr class="even">
+<td>130</td>
+<td align="right">130</td>
+<td align="right">0.0000120</td>
+<td align="right">0.9994293</td>
+</tr>
+<tr class="odd">
+<td>135</td>
+<td align="right">135</td>
+<td align="right">0.0000108</td>
+<td align="right">0.9994860</td>
+</tr>
+<tr class="even">
+<td>140</td>
+<td align="right">140</td>
+<td align="right">0.0000090</td>
+<td align="right">0.9995354</td>
+</tr>
+<tr class="odd">
+<td>145</td>
+<td align="right">145</td>
+<td align="right">0.0000080</td>
+<td align="right">0.9995773</td>
+</tr>
+<tr class="even">
+<td>150</td>
+<td align="right">150</td>
+<td align="right">0.0000071</td>
+<td align="right">0.9996148</td>
+</tr>
+</tbody>
+</table>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#Note: Variance till Number of Principal Components 45 is 0.9909898
+</code></pre>
+</div>
+
+<h4 id="applying-svm-on-training-set-and-calculating-accuracy-using-top-45-principal-components">Applying SVM on training set and calculating accuracy using top 45 principal components</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mnist_final &lt;- as.matrix(mnist[,-1]) %*% pca$x[,1:45]
+trainlabel &lt;- as.factor(trainlabel)
+svm.model.final &lt;- svm(mnist_final,trainlabel,cost = 2)
+predictionfinaltrain &lt;- predict(svm.model.final,mnist_final)
+correcttrainfinal &lt;- predictionfinaltrain==trainlabel
+Accuracytrainfinal &lt;- (sum(correcttrainfinal)/nrow(mnist_final))*100
+Accuracytrainfinal #99.70 %
+
+## [1] 99.70238
+</code></pre>
+</div>
+
+<h4 id="predicting-mnist-test-data-labels-using-above-model">Predicting mnist test data labels using above model</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mnist_test_pca&lt;-as.matrix(mnist_test) %*% pca$x[,1:45]
+mnist_predictions&lt;-predict(svm.model.final,mnist_test_pca)
+mnist_test$predicted_labels&lt;-mnist_predictions
+mnist_test$predicted_labels[1:10]
+
+##  [1] 2 0 9 9 3 7 0 3 0 3
+## Levels: 0 1 2 3 4 5 6 7 8 9
+
+#Testing a predicted label manually, Digit 3 on 8th record is correctly predicted.
+digit &lt;- matrix(as.numeric(mnist_test[8,-785]), nrow = 28)
+image(digit, col = grey.colors(255))
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/mnist_notebook_files/figure-markdown_strict/unnamed-chunk-15-1.png" alt="" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#I get a decent accuracy of 98.4% using this model on kaggle, but can we do better?
+</code></pre>
+</div>
+
+<h4 id="thanks-for-reviewing-this-script-i-will-soon-share-a-better-model-using-artificial-neural-networks--tensorflow">Thanks for reviewing this script, I will soon share a better model using Artificial Neural Networks &amp; tensorflow.</h4>
+
+      </article>
+
+      
+        <div class="blog-tags">
+          Tags:
+          
+          
+            <a href="/tags#R">R</a>
+          
+            <a href="/tags#Image Analysis">Image Analysis</a>
+          
+            <a href="/tags#Machine Learning">Machine Learning</a>
+          
+          
+        </div>
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+  <!--- Share on Twitter -->
+    <a href="https://twitter.com/intent/tweet?text=Identifying+Handwritten+Digits+http://mohitatgithub.github.io/2018-02-21-Identifying-Handwritten-Digits/"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fa fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+
+  
+  <!--- Share on Google Plus -->
+    <a href="https://plus.google.com/share?url=http://mohitatgithub.github.io/2018-02-21-Identifying-Handwritten-Digits/"
+      class="btn btn-social-icon btn-google" title="Share on Google+">
+      <span class="fa fa-fw fa-google-plus" aria-hidden="true"></span>
+      <span class="sr-only">Google+</span>
+    </a>
+  
+
+  
+  <!--- Share on LinkedIn -->
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://mohitatgithub.github.io/2018-02-21-Identifying-Handwritten-Digits/"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fa fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="/2018-02-20-Learning-Natural-Language-Processing/" data-toggle="tooltip" data-placement="top" title="Learning Natural Language Processing">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="/2018-02-23-Amazon-Reviews-Sentiment-Analysis/" data-toggle="tooltip" data-placement="top" title="Amazon Reviews Sentiment Analysis with TextBlob">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+        <div class="disqus-comments">
+          <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'mohitrathore';
+        /* ensure that pages with query string get the same discussion */
+            var url_parts = window.location.href.split("?");
+            var disqus_url = url_parts[0];
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+
+    <footer>
+  <div class="container beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links"><li><a href="/feed.xml" title="RSS"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">RSS</span>
+              </a>
+            </li><li><a href="mailto:mohitr1729@gmail.com" title="Email me"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Email me</span>
+              </a>
+            </li><li><a href="https://github.com/mohitatgithub" title="GitHub"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">GitHub</span>
+              </a>
+            </li><li><a href="https://linkedin.com/in/mohitr1729" title="LinkedIn"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">LinkedIn</span>
+              </a>
+            </li><li><a href="https://www.kaggle.com/mohitr" title="Kaggle"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-trophy fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Kaggle</span>
+              </a>
+            </li></ul>
+      <p class="copyright text-muted">
+      Mohit Rathore
+      &nbsp;&bull;&nbsp;
+      2019
+
+      
+
+      
+      </p>
+          <!-- Please don't remove this, keep my open source work credited :) -->
+    <p class="theme-by text-muted">
+      Theme by
+      <a href="http://deanattali.com/beautiful-jekyll/">beautiful-jekyll</a>
+    </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+    
+
+
+
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script>
+      	if (typeof jQuery == 'undefined') {
+      	  document.write('<script src="/js/jquery-1.11.2.min.js"></scr' + 'ipt>');
+      	}
+      </script>
+    
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+	<script src="/js/bootstrap.min.js"></script>
+    
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+	<script src="/js/main.js"></script>
+    
+  
+
+
+
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-114904532-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+	<!-- End Google Analytics -->
+
+
+  
+  </body>
+</html>

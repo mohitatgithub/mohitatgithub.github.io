@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Beautiful Jekyll | MIT license | Copyright Dean Attali 2016 -->
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Learning Natural Language Processing</title>
+
+  <meta name="author" content="Mohit Rathore" />
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Blog - Mohit Rathore" href="/feed.xml" />
+
+  
+
+  
+    
+      
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css" />
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    
+      <link rel="stylesheet" href="/css/bootstrap-social.css" />
+    
+      <link rel="stylesheet" href="/css/main.css" />
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+    
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+    
+  
+
+  
+
+  
+
+  
+
+    <!-- Facebook OpenGraph tags -->
+  
+
+  
+  <meta property="og:title" content="Learning Natural Language Processing" />
+  
+
+   
+  <meta property="og:description" content="Part I I wrote this notebook as part of learning Natural Language Processing in Python. Its a work in progress. #Lets import nltk library which I will use throughout this notebook for processing text import nltk nltk.data.path.append(&quot;/media/newhd/PyScripts/nltk&quot;) #Importing corpus of famous books from nltk.book import * *** Introductory Examples for...">
+  
+
+
+  <meta property="og:type" content="website" />
+
+  
+  <meta property="og:url" content="http://mohitatgithub.github.io/2018-02-20-Learning-Natural-Language-Processing/" />
+  <link rel="canonical" href="http://mohitatgithub.github.io/2018-02-20-Learning-Natural-Language-Processing/" />
+  
+
+  
+
+
+  <!-- Twitter summary cards -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@" />
+  <meta name="twitter:creator" content="@" />
+
+  
+  <meta name="twitter:title" content="Learning Natural Language Processing" />
+  
+
+  
+  <meta name="twitter:description" content="Part I I wrote this notebook as part of learning Natural Language Processing in Python. Its a work in progress. #Lets import nltk library which I will use throughout this notebook for processing text import nltk nltk.data.path.append(&quot;/media/newhd/PyScripts/nltk&quot;) #Importing corpus of famous books from nltk.book import * *** Introductory Examples for...">
+  
+
+  
+
+  
+
+</head>
+
+
+  <body>
+
+    
+  
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+        <a class="navbar-brand" href="http://mohitatgithub.github.io">Blog</a>
+      
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+            
+
+
+
+
+
+
+<a href="/aboutme">About Me</a>
+
+          </li>
+        
+        
+      </ul>
+    </div>
+
+	
+
+  </div>
+</nav>
+
+
+    <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Learning Natural Language Processing</h1>
+		  
+		  
+		  
+		  <span class="post-meta">Posted on February 20, 2018</span>
+		  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+      
+
+      <article role="main" class="blog-post">
+        <h3 id="part-i">Part I</h3>
+<p>I wrote this notebook as part of learning Natural Language Processing in Python. Its a work in progress.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets import nltk library which I will use throughout this notebook for processing text</span>
+<span class="kn">import</span> <span class="nn">nltk</span>
+<span class="n">nltk</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">"/media/newhd/PyScripts/nltk"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Importing corpus of famous books</span>
+<span class="kn">from</span> <span class="nn">nltk.book</span> <span class="kn">import</span> <span class="o">*</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>*** Introductory Examples for the NLTK Book ***
+Loading text1, ..., text9 and sent1, ..., sent9
+Type the name of the text or sentence to view it.
+Type: 'texts()' or 'sents()' to list the materials.
+text1: Moby Dick by Herman Melville 1851
+text2: Sense and Sensibility by Jane Austen 1811
+text3: The Book of Genesis
+text4: Inaugural Address Corpus
+text5: Chat Corpus
+text6: Monty Python and the Holy Grail
+text7: Wall Street Journal
+text8: Personals Corpus
+text9: The Man Who Was Thursday by G . K . Chesterton 1908
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets load the text file containing the complete novel, I am using the text file here not the file from corpus</span>
+<span class="n">f</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">'SenseAndSensibility.txt'</span><span class="p">,</span><span class="s">'r'</span><span class="p">)</span>
+<span class="n">novel</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets check the type of text</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">novel</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>str
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets check type of same book(Sense and Sensibility) stored in corpus as name 'text2'</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">text2</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>nltk.text.Text
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets check fisrt 100 words from novel</span>
+<span class="n">novel</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">99</span><span class="p">]</span>
+
+<span class="c">#Too few words, it seems that its treating every character separately</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>'SENSE AND SENSIBILITY\n\nby Jane Austen\n\n(1811)\n\n\n\n\nCHAPTER 1\n\n\nThe family of Dashwood had long been '
+</code></pre>
+</div>
+
+<h3 id="tokenization">Tokenization</h3>
+<p>Given a character sequence and a defined document unit, tokenization is the task of chopping it up into pieces, called tokens , perhaps at the same time throwing away certain characters, such as punctuation.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets split the text by space &amp; End of Line character &amp; check first 100 words again</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="n">novel</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">r'[ </span><span class="err">\</span><span class="s">t</span><span class="err">\</span><span class="s">n]+'</span><span class="p">,</span> <span class="n">novel</span><span class="p">)</span>
+<span class="n">novel</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">50</span><span class="p">]</span>
+
+<span class="c">#Looks better now</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>['SENSE',
+ 'AND',
+ 'SENSIBILITY',
+ 'by',
+ 'Jane',
+ 'Austen',
+ '(1811)',
+ 'CHAPTER',
+ '1',
+ 'The',
+ 'family',
+ 'of',
+ 'Dashwood',
+ 'had',
+ 'long',
+ 'been',
+ 'settled',
+ 'in',
+ 'Sussex.',
+ 'Their',
+ 'estate',
+ 'was',
+ 'large,',
+ 'and',
+ 'their',
+ 'residence',
+ 'was',
+ 'at',
+ 'Norland',
+ 'Park,',
+ 'in',
+ 'the',
+ 'centre',
+ 'of',
+ 'their',
+ 'property,',
+ 'where,',
+ 'for',
+ 'many',
+ 'generations,',
+ 'they',
+ 'had',
+ 'lived',
+ 'in',
+ 'so',
+ 'respectable',
+ 'a',
+ 'manner',
+ 'as',
+ 'to']
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="nb">type</span><span class="p">(</span><span class="n">novel</span><span class="p">)</span>
+<span class="c">#Note that after applying split function our novel is now a list of all words in book</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>list
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Counting total words in book</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">novel</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>118566
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets sort these words alphabetecally &amp; chek few of them</span>
+<span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">novel</span><span class="p">))[:</span><span class="mi">50</span><span class="p">]</span>
+
+
+<span class="c">#Looks good except few special characters with some words</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>['',
+ '"\'Tis',
+ '"\'Twill',
+ '"A',
+ '"About',
+ '"Add',
+ '"Ah!',
+ '"Ah!"',
+ '"Ah!--no,--have',
+ '"Ah,',
+ '"All',
+ '"Almost',
+ '"And',
+ '"Another',
+ '"Are',
+ '"As',
+ '"At',
+ '"Ay,',
+ '"Aye,',
+ '"Bartlett\'s',
+ '"Beautifully',
+ '"Because,"',
+ '"Being',
+ '"Bond',
+ '"Brandon',
+ '"But',
+ '"But,',
+ '"By',
+ '"Can',
+ '"Certainly',
+ '"Certainly,',
+ '"Certainly,"',
+ '"Certainly--and',
+ '"Certainly."',
+ '"Choice!--how',
+ '"Civil!--Did',
+ '"Cleveland!"--she',
+ '"Colonel',
+ '"Come',
+ '"Come,',
+ '"Concealing',
+ '"Could',
+ '"DEAR',
+ '"Dear',
+ '"Dear,',
+ '"Dearest',
+ '"Depend',
+ '"Devonshire!',
+ '"Did',
+ '"Disappointment?"']
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Converting all words in same case before checking books vocabulary</span>
+<span class="n">tokens</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">novel</span><span class="p">:</span>
+    <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Checking Vocabulary of book</span>
+<span class="n">vocab</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">vocab</span><span class="p">)</span>
+
+<span class="c">#Book contains roughly 12880 distinct words</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>12880
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets verify few of these words</span>
+<span class="n">tokens</span><span class="p">[</span><span class="mi">10</span><span class="p">:</span><span class="mi">60</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>['family',
+ 'of',
+ 'dashwood',
+ 'had',
+ 'long',
+ 'been',
+ 'settled',
+ 'in',
+ 'sussex.',
+ 'their',
+ 'estate',
+ 'was',
+ 'large,',
+ 'and',
+ 'their',
+ 'residence',
+ 'was',
+ 'at',
+ 'norland',
+ 'park,',
+ 'in',
+ 'the',
+ 'centre',
+ 'of',
+ 'their',
+ 'property,',
+ 'where,',
+ 'for',
+ 'many',
+ 'generations,',
+ 'they',
+ 'had',
+ 'lived',
+ 'in',
+ 'so',
+ 'respectable',
+ 'a',
+ 'manner',
+ 'as',
+ 'to',
+ 'engage',
+ 'the',
+ 'general',
+ 'good',
+ 'opinion',
+ 'of',
+ 'their',
+ 'surrounding',
+ 'acquaintance.',
+ 'the']
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Finding lexical richness of text</span>
+<span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">tokens</span><span class="p">))</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+
+<span class="c">#So total 10.8% words are distinct out of total number of words</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>0.1086314795135199
+</code></pre>
+</div>
+
+<h3 id="finding-word-frequencies">Finding Word Frequencies</h3>
+<p>As per wikipedia word “the” is most frequent in most textbooks, lets verify this using Sense and Sensibility.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Checking word lengths</span>
+<span class="n">word_lengths</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">vocab</span><span class="p">:</span>
+    <span class="n">word_lengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">))</span>
+
+<span class="n">word_lengths</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">word_lengths</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">24</span><span class="p">]</span>
+
+<span class="c">#Words as long as 40 &amp; 26!, lets find out these words</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[40,
+ 26,
+ 26,
+ 23,
+ 23,
+ 23,
+ 23,
+ 22,
+ 22,
+ 22,
+ 21,
+ 21,
+ 21,
+ 20,
+ 20,
+ 20,
+ 20,
+ 20,
+ 20,
+ 19,
+ 19,
+ 19,
+ 19,
+ 19]
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets find the longest words in book</span>
+<span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">vocab</span><span class="p">:</span>
+    <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">20</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+
+<span class="c">#hmm, so thsese are not single words, not sure why these words appear like this in text</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>willoughby.--remember
+confiding--everything
+thunderbolt.--thunderbolts
+somersetshire.--there,
+preparation!--day!--in
+drawing-room.--nobody
+foolish--business--this
+distinguished--as--they
+letter-writing?--delicate--tender--truly
+elinor?"--hesitatingly
+everything;--marianne's
+embarrassment.--whether
+delaford.--delaford,--that
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets find frequency of each word in book using NLTK inbuild functions,</span>
+<span class="c">#but for this lets first covert tokens to nltk text format</span>
+<span class="n">text</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="c">#got new format of type nltk.text.Text</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>nltk.text.Text
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Checking Frequency Distributions</span>
+<span class="n">fd</span> <span class="o">=</span> <span class="n">FreqDist</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="n">fd</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="c">#Checking 50 most frequently occuring words</span>
+
+<span class="c">#Most frequent words are stop words here, lets remove these &amp; check again</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[('the', 4071),
+ ('to', 4049),
+ ('of', 3538),
+ ('and', 3255),
+ ('her', 2230),
+ ('a', 2030),
+ ('in', 1896),
+ ('was', 1783),
+ ('i', 1672),
+ ('she', 1501),
+ ('it', 1273),
+ ('that', 1235),
+ ('be', 1231),
+ ('as', 1194),
+ ('for', 1187),
+ ('not', 1186),
+ ('his', 1002),
+ ('he', 998),
+ ('had', 983),
+ ('with', 968),
+ ('you', 882),
+ ('at', 813),
+ ('have', 801),
+ ('by', 733),
+ ('but', 708),
+ ('is', 675),
+ ('on', 663),
+ ('my', 587),
+ ('so', 579),
+ ('could', 554),
+ ('which', 552),
+ ('all', 545),
+ ('from', 530),
+ ('mrs.', 520),
+ ('would', 506),
+ ('their', 496),
+ ('they', 496),
+ ('very', 491),
+ ('no', 482),
+ ('him', 431),
+ ('been', 426),
+ ('were', 424),
+ ('what', 392),
+ ('any', 385),
+ ('every', 373),
+ ('this', 362),
+ ('than', 360),
+ ('your', 358),
+ ('more', 356),
+ ('elinor', 349)]
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Removing stop words</span>
+<span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+
+<span class="n">stop_words</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s">'english'</span><span class="p">))</span>
+<span class="n">filtered_text</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">tokens</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">stop_words</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Again checking 50 most frequent words</span>
+<span class="n">filtered_text</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">filtered_text</span><span class="p">)</span>
+<span class="n">new_fd</span> <span class="o">=</span> <span class="n">FreqDist</span><span class="p">(</span><span class="n">filtered_text</span><span class="p">)</span>
+<span class="n">new_fd</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[('could', 554),
+ ('mrs.', 520),
+ ('would', 506),
+ ('every', 373),
+ ('elinor', 349),
+ ('said', 342),
+ ('must', 279),
+ ('one', 262),
+ ('much', 258),
+ ('marianne', 252),
+ ('"i', 228),
+ ('might', 209),
+ ('though', 206),
+ ('miss', 206),
+ ('elinor,', 198),
+ ('think', 189),
+ ('never', 184),
+ ('know', 172),
+ ('without', 171),
+ ('mr.', 168),
+ ('may', 167),
+ ('marianne,', 165),
+ ('soon', 163),
+ ('see', 159),
+ ('time', 155),
+ ('nothing', 154),
+ ('her,', 153),
+ ('thing', 142),
+ ('first', 141),
+ ('colonel', 141),
+ ('it,', 140),
+ ('great', 139),
+ ('make', 136),
+ ('little', 136),
+ ('edward', 134),
+ ('made', 133),
+ ('two', 131),
+ ('ever', 129),
+ ('it.', 126),
+ ('dashwood', 123),
+ ('good', 123),
+ ('lady', 122),
+ ('well', 121),
+ ('always', 121),
+ ('give', 120),
+ ('shall', 119),
+ ('even', 117),
+ ('mother', 115),
+ ('sir', 112),
+ ('say', 111)]
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets check distribution of some of these words in book using Dispersion Plot</span>
+<span class="n">text</span><span class="o">.</span><span class="n">dispersion_plot</span><span class="p">([</span><span class="s">"mrs."</span><span class="p">,</span><span class="s">"elinor"</span><span class="p">,</span> <span class="s">"marianne"</span><span class="p">,</span> <span class="s">"lady"</span><span class="p">,</span> <span class="s">"mother"</span><span class="p">])</span>
+
+<span class="c">#Here Elinor &amp; Marianne are 2 main protagonists of novel</span>
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Sense-and-Sensibility/output_23_0.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Plotting word count of 50 most frequent words</span>
+<span class="n">new_fd</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Sense-and-Sensibility/output_24_0.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets check the context in which some of these frequent words appear</span>
+<span class="n">filtered_text</span><span class="o">.</span><span class="n">concordance</span><span class="p">(</span><span class="s">"elinor"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Displaying 25 of 349 matches:
+esemblance mother strikingly great. elinor saw, concern, excess sister's sensi
+h appeared amiable, loved daughter, elinor returned partiality. contrary every
+observe approve farther, reflection elinor chanced one day make difference sis
+prehended merits; persuasion regard elinor perhaps assisted penetration; reall
+!--but must allow difference taste. elinor feelings, therefore may overlook it
+ing, said subject; kind approbation elinor described excited drawings people,
+hall see imperfection face, heart." elinor started declaration, sorry warmth b
+se words again, leave room moment." elinor could help laughing. "excuse me," s
+draw himself, delightful would be!" elinor given real opinion sister. could co
+izement. knowledge this, impossible elinor feel easy subject. far depending re
+nce expense sudden removal, beloved elinor exposed another week insinuations.
+ght secure approbation answer sent. elinor always thought would prudent settle
+principally tended. separate edward elinor far object ever; wished show mrs. j
+d wishes, would kept it; discretion elinor prevailed. wisdom limited number se
+ sister's sake, turned eyes towards elinor see bore attacks, earnestness gave
+ see bore attacks, earnestness gave elinor far pain could arise common-place r
+g invitation, talked coming barton. elinor expect already?" "i never mentioned
+ther! edward's farewell distinction elinor me: good wishes affectionate brothe
+wind, pitied fears prevented mother elinor sharing delightful sensations. "is
+ted hold till seated chair parlour. elinor mother rose amazement entrance, eye
+'s estimation faultless marianne's; elinor saw nothing censure propensity, str
+y propriety, displayed want caution elinor could approve, spite marianne could
+idicule justly annexed sensibility. elinor obliged, though unwillingly, believ
+mself, pointed assurance affection. elinor could surprised attachment. wished
+discourse. already repeated history elinor three four times; elinor's memory e
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">filtered_text</span><span class="o">.</span><span class="n">concordance</span><span class="p">(</span><span class="s">"think"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Displaying 25 of 189 matches:
+mpoverishing dreadful degree. begged think subject. could answer rob child, chi
+ occasions, much little. one, least, think done enough them: even themselves, h
+knowing may expect," said lady, "but think expectations: question is, afford do
+tion is, afford do." "certainly--and think may afford give five hundred pounds
+ependence." "undoubtedly; thanks it. think secure, expected, raises gratitude a
+d half it; giving more, quite absurd think it. much able give something." "upon
+verything amiable. love already." "i think like him," said elinor, "when know h
+taste drawing!" replied elinor, "why think so? draw himself, indeed, great plea
+ies improving it. ever way learning, think would drawn well. distrusts judgment
+der deficient general taste. indeed, think may say cannot, behaviour perfectly
+ighest opinion world goodness sense. think every thing worthy amiable." "i sure
+ance, perceived. present, know well, think really handsome; least, almost so. s
+o. say you, marianne?" "i shall soon think handsome, elinor, now. tell love bro
+r. "i attempt deny," said she, "that think highly him--that greatly esteem, lik
+ion conduct opinions, never disposed think amiable; much mistaken edward aware
+ttage, assured everything done might think necessary, situation pleased her. ea
+g, plenty money, dare say shall, may think building. parlors small parties frie
+n old bachelor. mrs. dashwood, could think man five years younger herself, exce
+eny absurdity accusation, though may think intentionally ill-natured. colonel b
+ce happen woman single seven twenty, think colonel brandon's thirty-five object
+ntioned her, course must." "i rather think mistaken, talking yesterday getting
+n, "i see be. setting cap now, never think poor brandon." "that expression, sir
+or, soon left them, "for one morning think done pretty well. already ascertaine
+dy remembers talk to." "that exactly think him," cried marianne. "do boast it,
+make amends left behind, could teach think norland less regret ever. neither la
+</code></pre>
+</div>
+
+<h3 id="part-of-speech-tagging">Part of Speech Tagging</h3>
+<p>POS Tagging is the process of marking up a word in a text (corpus) as corresponding to a particular part of speech, based on both its definition and its context.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Part of Speech tagging</span>
+<span class="c">#Lets try POS on this famous line from Sense and Sensibility</span>
+<span class="n">sentence</span> <span class="o">=</span> <span class="s">"If I could but know his heart, everything would become easy"</span>
+<span class="n">sentence_tokens</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">word_tokenize</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+<span class="n">sentence_tokens</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>['If',
+ 'I',
+ 'could',
+ 'but',
+ 'know',
+ 'his',
+ 'heart',
+ ',',
+ 'everything',
+ 'would',
+ 'become',
+ 'easy']
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Part of Speech Tagging</span>
+<span class="n">tagged</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">pos_tag</span><span class="p">(</span><span class="n">sentence_tokens</span><span class="p">)</span>
+<span class="n">tagged</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[('If', 'IN'),
+ ('I', 'PRP'),
+ ('could', 'MD'),
+ ('but', 'CC'),
+ ('know', 'VB'),
+ ('his', 'PRP$'),
+ ('heart', 'NN'),
+ (',', ','),
+ ('everything', 'NN'),
+ ('would', 'MD'),
+ ('become', 'VB'),
+ ('easy', 'JJ')]
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Drawing POS Tree</span>
+<span class="n">grammar</span> <span class="o">=</span> <span class="s">"NP: {&lt;DT&gt;?&lt;JJ&gt;*&lt;NN&gt;}"</span>
+<span class="n">cp</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">RegexpParser</span><span class="p">(</span><span class="n">grammar</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">tagged</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>(S
+  If/IN
+  I/PRP
+  could/MD
+  but/CC
+  know/VB
+  his/PRP$
+  (NP heart/NN)
+  ,/,
+  (NP everything/NN)
+  would/MD
+  become/VB
+  easy/JJ)
+</code></pre>
+</div>
+
+<h3 id="finding-n-grams">Finding N-Grams</h3>
+<p>An n-gram is a contiguous sequence of n items from a given sample of text or speech. The items can be phonemes, syllables, letters, words or base pairs according to the application.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Finding frequent bigrams in text</span>
+<span class="n">text</span><span class="o">.</span><span class="n">collocations</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mrs. jennings; lady middleton; mrs. jennings,; colonel brandon; sir
+john; mrs. dashwood; every thing; mrs. jennings's; colonel brandon,;
+mrs. ferrars; said she,; colonel brandon's; sir john,; said elinor,;
+said he,; great deal; mrs. dashwood,; john dashwood; replied elinor,;
+every body
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Another way of finding all bigrams</span>
+<span class="kn">from</span> <span class="nn">nltk.util</span> <span class="kn">import</span> <span class="n">ngrams</span>
+<span class="n">bigrams</span><span class="o">=</span><span class="n">ngrams</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">bigrams</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[('sense', 'and'), ('and', 'sensibility'), ('sensibility', 'by'), ('by', 'jane'), ('jane', 'austen')]
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#And trigrams</span>
+<span class="n">trigrams</span><span class="o">=</span><span class="n">ngrams</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">trigrams</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[('sense', 'and', 'sensibility'), ('and', 'sensibility', 'by'), ('sensibility', 'by', 'jane'), ('by', 'jane', 'austen'), ('jane', 'austen', '(1811)')]
+</code></pre>
+</div>
+
+<h3 id="stemming--lemmatization">Stemming &amp; Lemmatization</h3>
+<p>For grammatical reasons, documents use different forms of a word, such as organize, organizes, and organizing. The goal of both stemming and lemmatization is to reduce inflectional forms and sometimes derivationally related forms of a word to a common base form.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Stemming Manually</span>
+<span class="c">#Defining suffixes to be stemmed</span>
+<span class="n">stemmer</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">RegexpStemmer</span><span class="p">(</span><span class="s">'ing$|es$'</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1000</span><span class="p">]:</span>
+    <span class="n">stemmed_token</span><span class="o">=</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">token</span><span class="o">!=</span><span class="n">stemmed_token</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">token</span><span class="p">,</span><span class="n">stemmed_token</span><span class="p">)</span>
+
+<span class="c">#surrounding to surround, inheriting to inherit &amp; remaining to remain seems fair but still seems like a naive approach.</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>surrounding surround
+coming com
+inheriting inherit
+remaining remain
+providing provid
+having hav
+cunning cunn
+living liv
+including includ
+thing th
+fortunes fortun
+besides besid
+remaining remain
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets try using nltk stemming function</span>
+<span class="kn">from</span> <span class="nn">nltk.stem</span> <span class="kn">import</span> <span class="n">PorterStemmer</span>
+
+<span class="n">ps</span> <span class="o">=</span> <span class="n">PorterStemmer</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">100</span><span class="p">]:</span>
+    <span class="n">stemmed_token</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">token</span><span class="o">!=</span><span class="n">stemmed_token</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">token</span><span class="p">,</span><span class="n">stemmed_token</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sense sens
+sensibility sensibl
+family famili
+settled settl
+estate estat
+was wa
+residence resid
+was wa
+centre centr
+many mani
+lived live
+respectable respect
+engage engag
+general gener
+surrounding surround
+this thi
+estate estat
+was wa
+single singl
+lived live
+very veri
+advanced advanc
+many mani
+years year
+his hi
+housekeeper housekeep
+his hi
+happened happen
+years year
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">wnl</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">WordNetLemmatizer</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="p">[</span><span class="n">wnl</span><span class="o">.</span><span class="n">lemmatize</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">100</span><span class="p">]]</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>['sense',
+ 'and',
+ 'sensibility',
+ 'by',
+ 'jane',
+ 'austen',
+ '(1811)',
+ 'chapter',
+ '1',
+ 'the',
+ 'family',
+ 'of',
+ 'dashwood',
+ 'had',
+ 'long',
+ 'been',
+ 'settled',
+ 'in',
+ 'sussex.',
+ 'their',
+ 'estate',
+ 'wa',
+ 'large,',
+ 'and',
+ 'their',
+ 'residence',
+ 'wa',
+ 'at',
+ 'norland',
+ 'park,',
+ 'in',
+ 'the',
+ 'centre',
+ 'of',
+ 'their',
+ 'property,',
+ 'where,',
+ 'for',
+ 'many',
+ 'generations,',
+ 'they',
+ 'had',
+ 'lived',
+ 'in',
+ 'so',
+ 'respectable',
+ 'a',
+ 'manner',
+ 'a',
+ 'to',
+ 'engage',
+ 'the',
+ 'general',
+ 'good',
+ 'opinion',
+ 'of',
+ 'their',
+ 'surrounding',
+ 'acquaintance.',
+ 'the',
+ 'late',
+ 'owner',
+ 'of',
+ 'this',
+ 'estate',
+ 'wa',
+ 'a',
+ 'single',
+ 'man,',
+ 'who',
+ 'lived',
+ 'to',
+ 'a',
+ 'very',
+ 'advanced',
+ 'age,',
+ 'and',
+ 'who',
+ 'for',
+ 'many',
+ 'year',
+ 'of',
+ 'his',
+ 'life,',
+ 'had',
+ 'a',
+ 'constant',
+ 'companion',
+ 'and',
+ 'housekeeper',
+ 'in',
+ 'his',
+ 'sister.',
+ 'but',
+ 'her',
+ 'death,',
+ 'which',
+ 'happened',
+ 'ten',
+ 'year']
+</code></pre>
+</div>
+
+<h3 id="sentences--words">Sentences &amp; Words</h3>
+<p>How many words can a sentence have? Some sources say that sentences longer than 25 words aren’t accessible.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets try to find &amp; seprate all sentences in novel</span>
+<span class="kn">from</span> <span class="nn">nltk</span> <span class="kn">import</span> <span class="n">sent_tokenize</span>
+<span class="n">f</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">'SenseAndSensibility.txt'</span><span class="p">,</span><span class="s">'r'</span><span class="p">)</span>
+<span class="n">book</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">sentence_list</span><span class="o">=</span><span class="n">sent_tokenize</span><span class="p">(</span><span class="n">book</span><span class="p">)</span>
+
+<span class="c">#printing first few sentences from book</span>
+<span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">sentence_list</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">30</span><span class="p">]:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span><span class="s">"</span><span class="se">\n\n</span><span class="s">"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>His
+attachment to them all increased.
+
+
+The constant attention of Mr. and
+Mrs. Henry Dashwood to his wishes, which proceeded not merely from
+interest, but from goodness of heart, gave him every degree of solid
+comfort which his age could receive; and the cheerfulness of the
+children added a relish to his existence.
+
+
+By a former marriage, Mr. Henry Dashwood had one son: by his present
+lady, three daughters.
+
+
+The son, a steady respectable young man, was
+amply provided for by the fortune of his mother, which had been large,
+and half of which devolved on him on his coming of age.
+
+
+By his own
+marriage, likewise, which happened soon afterwards, he added to his
+wealth.
+
+
+To him therefore the succession to the Norland estate was not
+so really important as to his sisters; for their fortune, independent
+of what might arise to them from their father's inheriting that
+property, could be but small.
+
+
+Their mother had nothing, and their
+father only seven thousand pounds in his own disposal; for the
+remaining moiety of his first wife's fortune was also secured to her
+child, and he had only a life-interest in it.
+
+
+The old gentleman died: his will was read, and like almost every other
+will, gave as much disappointment as pleasure.
+
+
+He was neither so
+unjust, nor so ungrateful, as to leave his estate from his nephew;--but
+he left it to him on such terms as destroyed half the value of the
+bequest.
+
+
+Mr. Dashwood had wished for it more for the sake of his wife
+and daughters than for himself or his son;--but to his son, and his
+son's son, a child of four years old, it was secured, in such a way, as
+to leave to himself no power of providing for those who were most dear
+to him, and who most needed a provision by any charge on the estate, or
+by any sale of its valuable woods.
+
+
+The whole was tied up for the
+benefit of this child, who, in occasional visits with his father and
+mother at Norland, had so far gained on the affections of his uncle, by
+such attractions as are by no means unusual in children of two or three
+years old; an imperfect articulation, an earnest desire of having his
+own way, many cunning tricks, and a great deal of noise, as to outweigh
+all the value of all the attention which, for years, he had received
+from his niece and her daughters.
+
+
+He meant not to be unkind, however,
+and, as a mark of his affection for the three girls, he left them a
+thousand pounds a-piece.
+
+
+Mr. Dashwood's disappointment was, at first, severe; but his temper was
+cheerful and sanguine; and he might reasonably hope to live many years,
+and by living economically, lay by a considerable sum from the produce
+of an estate already large, and capable of almost immediate
+improvement.
+
+
+But the fortune, which had been so tardy in coming, was
+his only one twelvemonth.
+
+
+He survived his uncle no longer; and ten
+thousand pounds, including the late legacies, was all that remained for
+his widow and daughters.
+
+
+His son was sent for as soon as his danger was known, and to him Mr.
+Dashwood recommended, with all the strength and urgency which illness
+could command, the interest of his mother-in-law and sisters.
+
+
+Mr. John Dashwood had not the strong feelings of the rest of the
+family; but he was affected by a recommendation of such a nature at
+such a time, and he promised to do every thing in his power to make
+them comfortable.
+
+
+His father was rendered easy by such an assurance,
+and Mr. John Dashwood had then leisure to consider how much there might
+prudently be in his power to do for them.
+
+
+He was not an ill-disposed young man, unless to be rather cold hearted
+and rather selfish is to be ill-disposed: but he was, in general, well
+respected; for he conducted himself with propriety in the discharge of
+his ordinary duties.
+
+
+Had he married a more amiable woman, he might
+have been made still more respectable than he was:--he might even have
+been made amiable himself; for he was very young when he married, and
+very fond of his wife.
+
+
+But Mrs. John Dashwood was a strong caricature
+of himself;--more narrow-minded and selfish.
+
+
+When he gave his promise to his father, he meditated within himself to
+increase the fortunes of his sisters by the present of a thousand
+pounds a-piece.
+
+
+He then really thought himself equal to it.
+
+
+The
+prospect of four thousand a-year, in addition to his present income,
+besides the remaining half of his own mother's fortune, warmed his
+heart, and made him feel capable of generosity.-- "Yes, he would give
+them three thousand pounds: it would be liberal and handsome!
+
+
+It would
+be enough to make them completely easy.
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Total sentences found</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">sentence_list</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>4835
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Sentence to Word ratio</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">sentence_list</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>0.040778975422971174
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Distribution of words in each sentence</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">word_distribution</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">sentence_list</span><span class="p">:</span>
+    <span class="n">temp_tokens</span><span class="o">=</span><span class="n">nltk</span><span class="o">.</span><span class="n">word_tokenize</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+    <span class="n">total_words</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">temp_tokens</span><span class="p">)</span>
+    <span class="n">word_distribution</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">total_words</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">word_distribution</span><span class="p">))</span>
+
+<span class="c">#Each sentence have roughly 29 words on average</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>29.23453981385729
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets plot this distribution</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<span class="n">sns</span><span class="o">.</span><span class="nb">set</span><span class="p">(</span><span class="n">color_codes</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pylab</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">word_distribution</span><span class="p">)</span>
+<span class="n">show</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Sense-and-Sensibility/output_46_0.png" alt="png" /></p>
+
+<h3 id="bulding-a-classifier">Bulding a classifier</h3>
+<p>Can we build classifier to predict gender of 4 main protagonists of the novel? I will discuss this in Part 2 of this notebook.</p>
+
+      </article>
+
+      
+        <div class="blog-tags">
+          Tags:
+          
+          
+            <a href="/tags#Python">Python</a>
+          
+            <a href="/tags#NLP">NLP</a>
+          
+          
+        </div>
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+  <!--- Share on Twitter -->
+    <a href="https://twitter.com/intent/tweet?text=Learning+Natural+Language+Processing+http://mohitatgithub.github.io/2018-02-20-Learning-Natural-Language-Processing/"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fa fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+
+  
+  <!--- Share on Google Plus -->
+    <a href="https://plus.google.com/share?url=http://mohitatgithub.github.io/2018-02-20-Learning-Natural-Language-Processing/"
+      class="btn btn-social-icon btn-google" title="Share on Google+">
+      <span class="fa fa-fw fa-google-plus" aria-hidden="true"></span>
+      <span class="sr-only">Google+</span>
+    </a>
+  
+
+  
+  <!--- Share on LinkedIn -->
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://mohitatgithub.github.io/2018-02-20-Learning-Natural-Language-Processing/"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fa fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="/2018-02-19-Jazz-Musicians-Collaboration-Graph-Analysis/" data-toggle="tooltip" data-placement="top" title="Jazz Musician Collaborations Graph Analysis using NetworkX">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="/2018-02-21-Identifying-Handwritten-Digits/" data-toggle="tooltip" data-placement="top" title="Identifying Handwritten Digits">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+        <div class="disqus-comments">
+          <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'mohitrathore';
+        /* ensure that pages with query string get the same discussion */
+            var url_parts = window.location.href.split("?");
+            var disqus_url = url_parts[0];
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+
+    <footer>
+  <div class="container beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links"><li><a href="/feed.xml" title="RSS"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">RSS</span>
+              </a>
+            </li><li><a href="mailto:mohitr1729@gmail.com" title="Email me"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Email me</span>
+              </a>
+            </li><li><a href="https://github.com/mohitatgithub" title="GitHub"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">GitHub</span>
+              </a>
+            </li><li><a href="https://linkedin.com/in/mohitr1729" title="LinkedIn"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">LinkedIn</span>
+              </a>
+            </li><li><a href="https://www.kaggle.com/mohitr" title="Kaggle"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-trophy fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Kaggle</span>
+              </a>
+            </li></ul>
+      <p class="copyright text-muted">
+      Mohit Rathore
+      &nbsp;&bull;&nbsp;
+      2019
+
+      
+
+      
+      </p>
+          <!-- Please don't remove this, keep my open source work credited :) -->
+    <p class="theme-by text-muted">
+      Theme by
+      <a href="http://deanattali.com/beautiful-jekyll/">beautiful-jekyll</a>
+    </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+    
+
+
+
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script>
+      	if (typeof jQuery == 'undefined') {
+      	  document.write('<script src="/js/jquery-1.11.2.min.js"></scr' + 'ipt>');
+      	}
+      </script>
+    
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+	<script src="/js/bootstrap.min.js"></script>
+    
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+	<script src="/js/main.js"></script>
+    
+  
+
+
+
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-114904532-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+	<!-- End Google Analytics -->
+
+
+  
+  </body>
+</html>

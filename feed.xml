@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog</title>
+    <description>Mohit Rathore</description>
+    <link>http://mohitatgithub.github.io</link>
+    <atom:link href="http://mohitatgithub.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    
+      <item>
+        <title>Understanding tf-idf with tidytext</title>
+        <description>
+          
+          Image Source During text processing &amp;amp; information retrieval we often need to find important words in document which can also help us identify what a document is about. tf-idf uses term frequency &amp;amp; inverse term frequency to find this. In this notebook I will briefly discuss tf-idf followed by an...
+        </description>
+        <pubDate>Sat, 28 Apr 2018 05:15:40 +0000</pubDate>
+        <link>http://mohitatgithub.github.io/2018-04-28-Learning-tf-idf-with-tidytext/</link>
+        <guid isPermaLink="true">http://mohitatgithub.github.io/2018-04-28-Learning-tf-idf-with-tidytext/</guid>
+      </item>
+    
+      <item>
+        <title>Introduction to Language Models</title>
+        <description>
+          
+          Language Modeling is an important idea behind many Natural Language Processing tasks such as Machine Translation, Spelling Correction, Speech Recognition, Summarization, Question-Answering etc. Some recent applications of Language models involve Smart Reply in Gmail &amp;amp; Google Text suggestion in SMS. This introduction is mostly inspired by Chapter 4 ‘Language Modeling...
+        </description>
+        <pubDate>Tue, 03 Apr 2018 05:15:40 +0000</pubDate>
+        <link>http://mohitatgithub.github.io/2018-04-03-Introduction-to-Language-Models/</link>
+        <guid isPermaLink="true">http://mohitatgithub.github.io/2018-04-03-Introduction-to-Language-Models/</guid>
+      </item>
+    
+      <item>
+        <title>MNIST image classification with CNN &amp; Keras</title>
+        <description>
+          
+          This is Part 2 of a MNIST digit classification notebook. Here I will be using Keras[1] to build a Convolutional Neural network for classifying hand written digits. My previous model achieved accuracy of 98.4%, I will try to reach atleast 99% accuracy using Artificial Neural Networks in this notebook. I...
+        </description>
+        <pubDate>Wed, 28 Mar 2018 05:15:40 +0000</pubDate>
+        <link>http://mohitatgithub.github.io/2018-03-28-MNIST-Image-Classification-with-CNN-&-Keras/</link>
+        <guid isPermaLink="true">http://mohitatgithub.github.io/2018-03-28-MNIST-Image-Classification-with-CNN-&-Keras/</guid>
+      </item>
+    
+      <item>
+        <title>Mushroom Classification</title>
+        <description>
+          
+          Image Source About dataset: I took this dataset from kaggle(https://www.kaggle.com/mig555/mushroom-classification/data) though it was originally contributed to the UCI Machine Learning repository nearly 30 years ago. This dataset includes descriptions of hypothetical samples corresponding to 23 species of gilled mushrooms in the Agaricus and Lepiota Family Mushroom drawn from The Audubon...
+        </description>
+        <pubDate>Sun, 25 Mar 2018 05:15:40 +0000</pubDate>
+        <link>http://mohitatgithub.github.io/2018-03-25-Mushroom-Classification/</link>
+        <guid isPermaLink="true">http://mohitatgithub.github.io/2018-03-25-Mushroom-Classification/</guid>
+      </item>
+    
+      <item>
+        <title>Beer Recommendation System</title>
+        <description>
+          
+          Image Source Problem Statement To build a recommendation system using collaborative filtering, where customers will be recommended the beer that they are most likely to buy using given dataset of half million beer reviews. Goals of Assignment: Choose only those beers that have at least N number of reviews, Find...
+        </description>
+        <pubDate>Tue, 20 Mar 2018 05:15:40 +0000</pubDate>
+        <link>http://mohitatgithub.github.io/2018-03-20-Building-a-Beer-Recommendation-System/</link>
+        <guid isPermaLink="true">http://mohitatgithub.github.io/2018-03-20-Building-a-Beer-Recommendation-System/</guid>
+      </item>
+    
+      <item>
+        <title>Titanic Tragedy: Exploratory Data Analysis</title>
+        <description>
+          
+          Image Source Data description The sinking of the RMS Titanic is one of the most infamous shipwrecks in history. On April 15, 1912, during her maiden voyage, the Titanic sank after colliding with an iceberg, killing 1502 out of 2224 passengers and crew. In this Notebook I will do basic...
+        </description>
+        <pubDate>Thu, 08 Mar 2018 05:15:40 +0000</pubDate>
+        <link>http://mohitatgithub.github.io/2018-03-08-Titanic-Tragedy-Exploratory-Data-Analysis/</link>
+        <guid isPermaLink="true">http://mohitatgithub.github.io/2018-03-08-Titanic-Tragedy-Exploratory-Data-Analysis/</guid>
+      </item>
+    
+      <item>
+        <title>San Francisco Kidnapping Crime Spatial Analysis</title>
+        <description>
+          
+          
+
+        </description>
+        <pubDate>Sat, 03 Mar 2018 00:00:00 +0000</pubDate>
+        <link>http://mohitatgithub.github.io/2018-03-03-San-Francisco-Kidnapping-Crime-Spatial-Analysis/</link>
+        <guid isPermaLink="true">http://mohitatgithub.github.io/2018-03-03-San-Francisco-Kidnapping-Crime-Spatial-Analysis/</guid>
+      </item>
+    
+      <item>
+        <title>Visualizing Significant Earthquakes Using Leaflet</title>
+        <description>
+          
+          
+
+        </description>
+        <pubDate>Sat, 24 Feb 2018 00:00:00 +0000</pubDate>
+        <link>http://mohitatgithub.github.io/2018-02-24-Visualizing-Significant-Earthquakes-Using-Leaflet/</link>
+        <guid isPermaLink="true">http://mohitatgithub.github.io/2018-02-24-Visualizing-Significant-Earthquakes-Using-Leaflet/</guid>
+      </item>
+    
+      <item>
+        <title>Amazon Reviews Sentiment Analysis with TextBlob</title>
+        <description>
+          
+          This dataset contains product reviews and metadata from Amazon, including 142.8 million reviews spanning May 1996 - July 2014 for variuos product categories. I have analysed dataset of kindle reviews here. import json from textblob import TextBlob import pandas as pd import gzip Data Extraction For this exercise I am...
+        </description>
+        <pubDate>Fri, 23 Feb 2018 05:15:40 +0000</pubDate>
+        <link>http://mohitatgithub.github.io/2018-02-23-Amazon-Reviews-Sentiment-Analysis/</link>
+        <guid isPermaLink="true">http://mohitatgithub.github.io/2018-02-23-Amazon-Reviews-Sentiment-Analysis/</guid>
+      </item>
+    
+      <item>
+        <title>Identifying Handwritten Digits</title>
+        <description>
+          
+          Here I will be developing a model for prediction of handwritten digits using famous MNIST dataset. I will build first model using Support Vector Machine(SVM) followed by an improved approach using Principal Component Analysis(PCA). Fetching Data #Loading train &amp;amp; test data, the datasets were obtained from kaggle: https://www.kaggle.com/c/digit-recognizer/data mnist &amp;lt;-...
+        </description>
+        <pubDate>Wed, 21 Feb 2018 05:15:40 +0000</pubDate>
+        <link>http://mohitatgithub.github.io/2018-02-21-Identifying-Handwritten-Digits/</link>
+        <guid isPermaLink="true">http://mohitatgithub.github.io/2018-02-21-Identifying-Handwritten-Digits/</guid>
+      </item>
+    
+      <item>
+        <title>Learning Natural Language Processing</title>
+        <description>
+          
+          Part I I wrote this notebook as part of learning Natural Language Processing in Python. Its a work in progress. #Lets import nltk library which I will use throughout this notebook for processing text import nltk nltk.data.path.append(&quot;/media/newhd/PyScripts/nltk&quot;) #Importing corpus of famous books from nltk.book import * *** Introductory Examples for...
+        </description>
+        <pubDate>Tue, 20 Feb 2018 05:15:40 +0000</pubDate>
+        <link>http://mohitatgithub.github.io/2018-02-20-Learning-Natural-Language-Processing/</link>
+        <guid isPermaLink="true">http://mohitatgithub.github.io/2018-02-20-Learning-Natural-Language-Processing/</guid>
+      </item>
+    
+      <item>
+        <title>Jazz Musician Collaborations Graph Analysis using NetworkX</title>
+        <description>
+          
+          Here I will be analyzing a graph representing Collaborations among Jazz Musicians. Along the way we will also learn &amp;amp; explore some interesting concepts from Graph Theory using NetworkX package. About Dataset: Each node is a Jazz musician and an edge denotes that two musicians have played together in a...
+        </description>
+        <pubDate>Mon, 19 Feb 2018 05:15:40 +0000</pubDate>
+        <link>http://mohitatgithub.github.io/2018-02-19-Jazz-Musicians-Collaboration-Graph-Analysis/</link>
+        <guid isPermaLink="true">http://mohitatgithub.github.io/2018-02-19-Jazz-Musicians-Collaboration-Graph-Analysis/</guid>
+      </item>
+    
+      <item>
+        <title>Machine Learning with Iris Dataset</title>
+        <description>
+          
+          Image Source Exploratory Data Analysis dim(iris) #Checking dimensions, iris data have 150 observations &amp;amp; 6 features ## [1] 150 6 Checking count of each species table(iris$Species) #Have equal number of each ## ## Iris-setosa Iris-versicolor Iris-virginica ## 50 50 50 Checking iris dataset summary summary(iris) #Checking data summary, there are...
+        </description>
+        <pubDate>Fri, 16 Feb 2018 05:15:40 +0000</pubDate>
+        <link>http://mohitatgithub.github.io/2018-02-16-Machine-Learning-with-Iris-dataset/</link>
+        <guid isPermaLink="true">http://mohitatgithub.github.io/2018-02-16-Machine-Learning-with-Iris-dataset/</guid>
+      </item>
+    
+  </channel>
+</rss>

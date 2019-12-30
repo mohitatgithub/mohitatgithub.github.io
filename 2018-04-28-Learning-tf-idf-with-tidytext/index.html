@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Beautiful Jekyll | MIT license | Copyright Dean Attali 2016 -->
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Understanding tf-idf with tidytext</title>
+
+  <meta name="author" content="Mohit Rathore" />
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Blog - Mohit Rathore" href="/feed.xml" />
+
+  
+
+  
+    
+      
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css" />
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    
+      <link rel="stylesheet" href="/css/bootstrap-social.css" />
+    
+      <link rel="stylesheet" href="/css/main.css" />
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+    
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+    
+  
+
+  
+
+  
+
+  
+
+    <!-- Facebook OpenGraph tags -->
+  
+
+  
+  <meta property="og:title" content="Understanding tf-idf with tidytext" />
+  
+
+   
+  <meta property="og:description" content="Image Source During text processing &amp;amp; information retrieval we often need to find important words in document which can also help us identify what a document is about. tf-idf uses term frequency &amp;amp; inverse term frequency to find this. In this notebook I will briefly discuss tf-idf followed by an...">
+  
+
+
+  <meta property="og:type" content="website" />
+
+  
+  <meta property="og:url" content="http://mohitatgithub.github.io/2018-04-28-Learning-tf-idf-with-tidytext/" />
+  <link rel="canonical" href="http://mohitatgithub.github.io/2018-04-28-Learning-tf-idf-with-tidytext/" />
+  
+
+  
+
+
+  <!-- Twitter summary cards -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@" />
+  <meta name="twitter:creator" content="@" />
+
+  
+  <meta name="twitter:title" content="Understanding tf-idf with tidytext" />
+  
+
+  
+  <meta name="twitter:description" content="Image Source During text processing &amp;amp; information retrieval we often need to find important words in document which can also help us identify what a document is about. tf-idf uses term frequency &amp;amp; inverse term frequency to find this. In this notebook I will briefly discuss tf-idf followed by an...">
+  
+
+  
+
+  
+
+</head>
+
+
+  <body>
+
+    
+  
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+        <a class="navbar-brand" href="http://mohitatgithub.github.io">Blog</a>
+      
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+            
+
+
+
+
+
+
+<a href="/aboutme">About Me</a>
+
+          </li>
+        
+        
+      </ul>
+    </div>
+
+	
+
+  </div>
+</nav>
+
+
+    <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Understanding tf-idf with tidytext</h1>
+		  
+		  
+		  
+		  <span class="post-meta">Posted on April 28, 2018</span>
+		  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+      
+
+      <article role="main" class="blog-post">
+        <p><br /></p>
+<center>
+<img src="/Images/Blog/tf-idf_files/alice.png" width="250" height="300" />
+<br />
+<a href="https://commons.wikimedia.org/wiki/File:Alice_par_John_Tenniel_30.png">Image Source</a>
+</center>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async=""></script>
+
+<p>During text processing &amp; information retrieval we often need to find
+important words in document which can also help us identify what a
+document is about. tf-idf uses term frequency &amp; inverse term frequency
+to find this. In this notebook I will briefly discuss tf-idf followed by
+an implementation of tf-idf on novel ‘Alice’s Adventures in Wonderland’
+using tidytext package in R.</p>
+
+<p><br /></p>
+
+<h4 id="term-frequency">Term Frequency</h4>
+
+<p>The term frequency <script type="math/tex">tf_{t,d}</script> of a term t in a document d represent the number of times t occurs in
+d. So a document with higher term frequency might be more relevant for
+searched term, but document relevance is not directly related to term
+frequency for example if we search for term ‘car’ then a document having
+car 10 times in it may not be 10 times more relevant compared to
+document with word ‘car’ appearing say only 1 or 2 times.</p>
+
+<p>So TF or Term Frequency can be expressed as log of actual frequency as:</p>
+
+<script type="math/tex; mode=display">tf_{t,d} = 1 + log_{10}(tf_{t,d})</script>
+
+<p>here 1 is added to avoid infinity in case term frequency us 0. if term
+does not occur in document then we can set tf as 0.</p>
+
+<p><br /></p>
+
+<h4 id="inverse-term-frequency">Inverse Term Frequency</h4>
+
+<p>If we only use term frequency during text processing then most stop
+words like the,to,is etc. will get very high tf values which will not be
+relevant, so we use idf which decreases the weight for commonly used
+words and increases the weight for words which are actually relevant
+during information retrieval.</p>
+
+<p>IDF or inverse document frequency is expressed as:</p>
+
+<script type="math/tex; mode=display">idf_t = log_{10}(N/df_t)</script>
+
+<p>here <script type="math/tex">N</script> represents total number of documents in our corpus &amp; <script type="math/tex">df_t</script> represent number of documents which contain term t. Here frequent stop word like ‘the’ will be present in almost all documents making <script type="math/tex">N = df_{the}</script> &amp; <script type="math/tex">idf_{the} = 0</script>.</p>
+
+<p><br /></p>
+
+<h4 id="tf-idf">TF-IDF</h4>
+
+<p>Combination of tf &amp; idf is measure of how important a word is to a
+document in a corpus of documents. tf-idf is expressed as:</p>
+
+<script type="math/tex; mode=display">tf*idf</script>
+
+<p>Note: In tf-idf there is hyphen between tf &amp; idf, don’t confuse this with
+subtraction, tf &amp; idf are multiplied here.</p>
+
+<p><br /></p>
+
+<h4 id="finding-tf-idf-values-from-novel-alices-adventures-in-wonderland">Finding tf-idf values from novel ‘Alice’s Adventures in Wonderland’</h4>
+
+<p>Downloading novel ‘Alice’s Adventures in Wonderland’ from gutenberg.org
+using gutenbergr package</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>raw_text &lt;- gutenberg_download(28885) #Alice's Adventures in Wonderland by Lewis Carroll
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<p>Alice’s Adventures in Wonderland contains 12 Chapters, I will treat each
+chapter as a document and find tf-idf across each chapter of novel. Lets
+drive 3 new features story, line &amp; word from raw_text.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>alice &lt;- raw_text %&gt;%
+    mutate(story = ifelse(str_detect(text, "CHAPTER"), text, NA)) %&gt;%
+    fill(story) %&gt;%
+    mutate(story = factor(story, levels = unique(story))) %&gt;%
+    mutate(line = row_number()) %&gt;%
+    unnest_tokens(word, text)
+
+alice
+
+## # A tibble: 27,586 x 4
+##    gutenberg_id  story  line               word
+##           &lt;int&gt; &lt;fctr&gt; &lt;int&gt;              &lt;chr&gt;
+##  1        28885     NA     1            alice's
+##  2        28885     NA     1         adventures
+##  3        28885     NA     1                 in
+##  4        28885     NA     1         wonderland
+##  5        28885     NA     3       illustration
+##  6        28885     NA     3              alice
+##  7        28885     NA     5       illustration
+##  8        28885     NA     7 alice's.adventures
+##  9        28885     NA     8      in.wonderland
+## 10        28885     NA     9   by.lewis.carroll
+## # ... with 27,576 more rows
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<p>Lets find most frequent word in novel by sorting words by their
+frequency</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>alice %&gt;%
+  count(word, sort = TRUE)
+
+## # A tibble: 2,919 x 2
+##     word     n
+##    &lt;chr&gt; &lt;int&gt;
+##  1   the  1676
+##  2   and   899
+##  3    to   757
+##  4     a   649
+##  5   she   543
+##  6    it   539
+##  7    of   523
+##  8  said   466
+##  9 alice   391
+## 10     i   391
+## # ... with 2,909 more rows
+</code></pre>
+</div>
+
+<p><em>As most stop words like the, to, a etc. are most frequent in most text
+corpus we need to remove these to get more relevant words.</em></p>
+
+<p><br /></p>
+
+<p>Removing stop words</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>tidy_alice &lt;- alice %&gt;%
+    anti_join(stop_words)
+
+## Joining, by = "word"
+
+tidy_alice
+
+## # A tibble: 8,319 x 4
+##    gutenberg_id       story  line        word
+##           &lt;int&gt;      &lt;fctr&gt; &lt;int&gt;       &lt;chr&gt;
+##  1        28885 CHAPTER XII  3635  apostrophe
+##  2        28885 CHAPTER XII  3635         153
+##  3        28885 CHAPTER XII  3633 parenthesis
+##  4        28885 CHAPTER XII  3631         hog
+##  5        28885 CHAPTER XII  3631         104
+##  6        28885 CHAPTER XII  3629         103
+##  7        28885 CHAPTER XII  3627          91
+##  8        28885 CHAPTER XII  3624      single
+##  9        28885 CHAPTER XII  3624          69
+## 10        28885 CHAPTER XII  3622   quotation
+## # ... with 8,309 more rows
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<p>Words sorted by frequency, here alice is most frequent word followed by
+queen &amp; time.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>tidy_alice %&gt;%
+  count(word, sort = TRUE)
+
+## # A tibble: 2,448 x 2
+##       word     n
+##      &lt;chr&gt; &lt;int&gt;
+##  1   alice   391
+##  2   queen    73
+##  3    time    73
+##  4    king    61
+##  5    mock    59
+##  6  turtle    58
+##  7 gryphon    55
+##  8  hatter    55
+##  9    head    53
+## 10  rabbit    49
+## # ... with 2,438 more rows
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<p>Top 10 words with highest tf-idf values in each Chapter of Alice’s
+Adventures in Wonderland</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>tidy_alice %&gt;%
+    count(story, word, sort = TRUE) %&gt;%
+    bind_tf_idf(word, story, n) %&gt;%
+    arrange(-tf_idf) %&gt;%
+    group_by(story) %&gt;%
+    top_n(10) %&gt;%
+    ungroup %&gt;%
+    mutate(word = reorder(word, tf_idf)) %&gt;%
+    ggplot(aes(word, tf_idf, fill = story)) +
+    geom_col(alpha = 0.8, show.legend = FALSE) +
+    facet_wrap(~ story, scales = "free") +
+    coord_flip()
+
+## Selecting by tf_idf
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/tf-idf_files/figure-markdown_strict/unnamed-chunk-6-1.png" alt="" /></p>
+
+<p><br /></p>
+
+<p>Lets also check words with highest tf-idf values in alice dataset with
+stop words included</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>alice %&gt;%
+    count(story, word, sort = TRUE) %&gt;%
+    bind_tf_idf(word, story, n) %&gt;%
+    arrange(-tf_idf) %&gt;%
+    group_by(story) %&gt;%
+    top_n(10) %&gt;%
+    ungroup %&gt;%
+    mutate(word = reorder(word, tf_idf)) %&gt;%
+    ggplot(aes(word, tf_idf, fill = story)) +
+    geom_col(alpha = 0.8, show.legend = FALSE) +
+    facet_wrap(~ story, scales = "free") +
+    coord_flip()
+
+## Selecting by tf_idf
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/tf-idf_files/figure-markdown_strict/unnamed-chunk-7-1.png" alt="" /></p>
+
+<p><em>As expected top tf-idf values are not affected by stop words as IDF
+values of such stop words are very small due to their presence in almost every chapter.</em></p>
+
+<p><br /></p>
+
+<h4 id="refrences">Refrences</h4>
+
+<ol>
+  <li>Project Gutenburg, <a href="http://www.gutenberg.org/">http://www.gutenberg.org/</a></li>
+  <li>Tidy Text Mining with R, <a href="https://www.tidytextmining.com/">https://www.tidytextmining.com/</a></li>
+  <li>Speech &amp; language processing,
+<a href="https://web.stanford.edu/~jurafsky/slp3/">https://web.stanford.edu/~jurafsky/slp3/</a></li>
+  <li>gutenbergr, https://cran.r-project.org/web/packages/gutenbergr/index.html</li>
+</ol>
+
+<p><br /></p>
+
+<p><em>Thanks for reading this notebook. In my next notebook I will extend
+this idea further &amp; use tf-idf values to explore Topic Models.</em></p>
+
+      </article>
+
+      
+        <div class="blog-tags">
+          Tags:
+          
+          
+            <a href="/tags#NLP">NLP</a>
+          
+            <a href="/tags#R">R</a>
+          
+            <a href="/tags#Tutorial">Tutorial</a>
+          
+          
+        </div>
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+  <!--- Share on Twitter -->
+    <a href="https://twitter.com/intent/tweet?text=Understanding+tf-idf+with+tidytext+http://mohitatgithub.github.io/2018-04-28-Learning-tf-idf-with-tidytext/"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fa fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+
+  
+  <!--- Share on Google Plus -->
+    <a href="https://plus.google.com/share?url=http://mohitatgithub.github.io/2018-04-28-Learning-tf-idf-with-tidytext/"
+      class="btn btn-social-icon btn-google" title="Share on Google+">
+      <span class="fa fa-fw fa-google-plus" aria-hidden="true"></span>
+      <span class="sr-only">Google+</span>
+    </a>
+  
+
+  
+  <!--- Share on LinkedIn -->
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://mohitatgithub.github.io/2018-04-28-Learning-tf-idf-with-tidytext/"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fa fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="/2018-04-03-Introduction-to-Language-Models/" data-toggle="tooltip" data-placement="top" title="Introduction to Language Models">&larr; Previous Post</a>
+        </li>
+        
+        
+      </ul>
+
+      
+        <div class="disqus-comments">
+          <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'mohitrathore';
+        /* ensure that pages with query string get the same discussion */
+            var url_parts = window.location.href.split("?");
+            var disqus_url = url_parts[0];
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+
+    <footer>
+  <div class="container beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links"><li><a href="/feed.xml" title="RSS"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">RSS</span>
+              </a>
+            </li><li><a href="mailto:mohitr1729@gmail.com" title="Email me"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Email me</span>
+              </a>
+            </li><li><a href="https://github.com/mohitatgithub" title="GitHub"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">GitHub</span>
+              </a>
+            </li><li><a href="https://linkedin.com/in/mohitr1729" title="LinkedIn"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">LinkedIn</span>
+              </a>
+            </li><li><a href="https://www.kaggle.com/mohitr" title="Kaggle"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-trophy fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Kaggle</span>
+              </a>
+            </li></ul>
+      <p class="copyright text-muted">
+      Mohit Rathore
+      &nbsp;&bull;&nbsp;
+      2019
+
+      
+
+      
+      </p>
+          <!-- Please don't remove this, keep my open source work credited :) -->
+    <p class="theme-by text-muted">
+      Theme by
+      <a href="http://deanattali.com/beautiful-jekyll/">beautiful-jekyll</a>
+    </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+    
+
+
+
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script>
+      	if (typeof jQuery == 'undefined') {
+      	  document.write('<script src="/js/jquery-1.11.2.min.js"></scr' + 'ipt>');
+      	}
+      </script>
+    
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+	<script src="/js/bootstrap.min.js"></script>
+    
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+	<script src="/js/main.js"></script>
+    
+  
+
+
+
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-114904532-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+	<!-- End Google Analytics -->
+
+
+  
+  </body>
+</html>

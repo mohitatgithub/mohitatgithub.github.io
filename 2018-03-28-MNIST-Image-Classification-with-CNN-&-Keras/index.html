@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Beautiful Jekyll | MIT license | Copyright Dean Attali 2016 -->
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>MNIST image classification with CNN & Keras</title>
+
+  <meta name="author" content="Mohit Rathore" />
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Blog - Mohit Rathore" href="/feed.xml" />
+
+  
+
+  
+    
+      
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css" />
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    
+      <link rel="stylesheet" href="/css/bootstrap-social.css" />
+    
+      <link rel="stylesheet" href="/css/main.css" />
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+    
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+    
+  
+
+  
+
+  
+
+  
+
+    <!-- Facebook OpenGraph tags -->
+  
+
+  
+  <meta property="og:title" content="MNIST image classification with CNN & Keras" />
+  
+
+   
+  <meta property="og:description" content="This is Part 2 of a MNIST digit classification notebook. Here I will be using Keras[1] to build a Convolutional Neural network for classifying hand written digits. My previous model achieved accuracy of 98.4%, I will try to reach atleast 99% accuracy using Artificial Neural Networks in this notebook. I...">
+  
+
+
+  <meta property="og:type" content="website" />
+
+  
+  <meta property="og:url" content="http://mohitatgithub.github.io/2018-03-28-MNIST-Image-Classification-with-CNN-&-Keras/" />
+  <link rel="canonical" href="http://mohitatgithub.github.io/2018-03-28-MNIST-Image-Classification-with-CNN-&-Keras/" />
+  
+
+  
+
+
+  <!-- Twitter summary cards -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@" />
+  <meta name="twitter:creator" content="@" />
+
+  
+  <meta name="twitter:title" content="MNIST image classification with CNN & Keras" />
+  
+
+  
+  <meta name="twitter:description" content="This is Part 2 of a MNIST digit classification notebook. Here I will be using Keras[1] to build a Convolutional Neural network for classifying hand written digits. My previous model achieved accuracy of 98.4%, I will try to reach atleast 99% accuracy using Artificial Neural Networks in this notebook. I...">
+  
+
+  
+
+  
+
+</head>
+
+
+  <body>
+
+    
+  
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+        <a class="navbar-brand" href="http://mohitatgithub.github.io">Blog</a>
+      
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+            
+
+
+
+
+
+
+<a href="/aboutme">About Me</a>
+
+          </li>
+        
+        
+      </ul>
+    </div>
+
+	
+
+  </div>
+</nav>
+
+
+    <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>MNIST image classification with CNN & Keras</h1>
+		  
+		  
+		  
+		  <span class="post-meta">Posted on March 28, 2018</span>
+		  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+      
+
+      <article role="main" class="blog-post">
+        <p>This is Part 2 of a MNIST digit classification <a href="/2018-02-20-Identifying-Handwritten-Digits/">notebook</a>. Here I will be using Keras<sup><a href="https://keras.io/">[1]</a></sup> to build a Convolutional Neural network for classifying hand written digits. My previous model achieved accuracy of 98.4%, I will try to reach atleast 99% accuracy using Artificial Neural Networks in this notebook. I will also present basic intution behind CNN.</p>
+
+<p><br /></p>
+
+<h4 id="about-mnist-dataset">About MNIST Dataset</h4>
+
+<p>MNIST<sup><a href="http://yann.lecun.com/exdb/mnist/">[2]</a></sup> is dataset of handwritten digits and contains a training set of 60,000 examples and a test set of 10,000 examples. So far Convolutional Neural Networks(CNN) give best accuracy on MNIST dataset, a comprehensive list of papers with their accuracy on MNIST is given <a href="http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html">here</a>. Best accuracy acheived is 99.79%.<sup><a href="https://cs.nyu.edu/~wanli/dropc/">[3]</a></sup></p>
+
+<p>This is a sample from MNIST dataset.</p>
+<center><img src="/Images/Blog/MNIST_Keras/MnistExamples.png" />
+<br />
+<a href="https://commons.wikimedia.org/wiki/File:MnistExamples.png">Image Source</a>
+</center>
+
+<p><br /></p>
+
+<h4 id="importing-dataset--packages">Importing dataset &amp; packages</h4>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">keras</span>
+<span class="kn">from</span> <span class="nn">keras.datasets</span> <span class="kn">import</span> <span class="n">mnist</span>
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Dropout</span><span class="p">,</span> <span class="n">Flatten</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Conv2D</span><span class="p">,</span> <span class="n">MaxPooling2D</span>
+<span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">backend</span> <span class="k">as</span> <span class="n">K</span>
+<span class="kn">from</span> <span class="nn">keras.utils.vis_utils</span> <span class="kn">import</span> <span class="n">plot_model</span>
+<span class="kn">from</span> <span class="nn">keras_tqdm</span> <span class="kn">import</span> <span class="n">TQDMNotebookCallback</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'TF_CPP_MIN_LOG_LEVEL'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'3'</span>
+</code></pre>
+</div>
+<p><br /></p>
+
+<h4 id="preprocessing-mnist-dataset">Preprocessing MNIST dataset</h4>
+
+<p>Loading MNIST dataset and splitting into train &amp; test</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span> <span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span> <span class="o">=</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">num_classes</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="mi">15</span>
+
+<span class="k">if</span> <span class="n">K</span><span class="o">.</span><span class="n">image_data_format</span><span class="p">()</span> <span class="o">==</span> <span class="s">'channels_first'</span><span class="p">:</span>
+    <span class="n">x_train</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span><span class="p">)</span>
+    <span class="n">x_test</span> <span class="o">=</span> <span class="n">x_test</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span><span class="p">)</span>
+    <span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">x_train</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">x_test</span> <span class="o">=</span> <span class="n">x_test</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">'float32'</span><span class="p">)</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">x_test</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">'float32'</span><span class="p">)</span>
+<span class="n">x_train</span> <span class="o">/=</span> <span class="mi">255</span>
+<span class="n">x_test</span> <span class="o">/=</span> <span class="mi">255</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'x_train shape:'</span><span class="p">,</span> <span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">'train samples'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">'test samples'</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>x_train shape: (60000, 28, 28, 1)
+60000 train samples
+10000 test samples
+</code></pre>
+</div>
+
+<p><em>train set contains 60000 images &amp; test set contains 10000 image sample. Each image is of 28x28 pixel &amp; have a associated class in training set.</em></p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">y_train</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">to_categorical</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">)</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">to_categorical</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h4 id="building-model">Building Model</h4>
+
+<p>Before building the CNN model using keras, lets briefly understand what are CNN &amp; how they work.</p>
+
+<p><strong>Convolutional Neural Networks(CNN) or ConvNet</strong> are popular neural network architectures commonly used in Computer Vision problems like Image Classification &amp; Object Detection. Consider an color image of 1000x1000 pixels or 3 million inputs, using a normal neural network with 1000 hidden units in first layer will generate a weight matrix of 3 billion parameters! CNN uses set of Convolution &amp; Pooling operations to deal with this complexity.</p>
+
+<p><strong>Convolution Operation:</strong> Convolution operation involves overlapping of a filter/kernal of fixed size over the input image matrix and then sliding across pixel-by-pixel to cover the entire image/matrix. As shown below as 3x3  filter(yellow) window slides over 5x5 image matrix all values within yellow matrix are added &amp; stored in new Convolved(pink) matrix.</p>
+
+<center><img src="/Images/Blog/MNIST_Keras/convolution.gif" /></center>
+
+<p><strong>Pooling Operation:</strong> Along with Convolution layers CNN also use pooling layers to reduce the size of the representation, to speed the computation, as well as make some of the features detected a bit more robust. Pooling is of 2 types: Max Pooling &amp; Average Pooling. We will be using Max Pooling in our ConvNet. Max Pooling operation simply find maximum number within sliding filter window over image matrix and return it new matrix as shown below. So maximum numbers 6,8,3,4 are selected from each 2x2 window from a 4x4 image matrix.</p>
+
+<center><img src="/Images/Blog/MNIST_Keras/Max_pooling.png" /></center>
+
+<p><strong>Dropout:</strong> Dropout is a regularization technique used in neural networks to prevent overfitting. For dropout we go through each layer of network and set some probability of eliminating a node in neural network. Eliminating these units at random results in spreading &amp; shrinking of weights.</p>
+
+<center><img src="/Images/Blog/MNIST_Keras/dropout.png" style="width:450px;height:280px;" /></center>
+
+<p><strong>Typical CNN Architecture:</strong> Combination of all these &amp; fully connected layers results in various ConvNet architectures used today for various computer vision tasks. Below is an example of this architecture:</p>
+
+<center><img src="/Images/Blog/MNIST_Keras/Typical_cnn.png" style="width:600px;height:280px;" /></center>
+
+<p>This was a very brief introduction about ConvNet layers. you can use below links to understand this topic further:</p>
+<ol>
+  <li><a href="http://cs231n.github.io/convolutional-networks/">CS231n: Convolutional Neural Networks for Visual Recognition</a></li>
+  <li><a href="https://www.coursera.org/learn/convolutional-neural-networks">Coursera course on Convolutional Neural Networks by Andrew Ng</a></li>
+</ol>
+
+<p>Now lets build our model with all layers discussed above along with Dense or fully connected layers.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="n">input_shape</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.25</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Flatten</span><span class="p">())</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.5</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'softmax'</span><span class="p">))</span>
+
+<span class="n">model</span><span class="o">.</span><span class="nb">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">categorical_crossentropy</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adadelta</span><span class="p">(),</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s">'accuracy'</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h4 id="model-architecture">Model Architecture</h4>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv2d_1 (Conv2D)            (None, 26, 26, 32)        320       
+_________________________________________________________________
+conv2d_2 (Conv2D)            (None, 24, 24, 64)        18496     
+_________________________________________________________________
+max_pooling2d_1 (MaxPooling2 (None, 12, 12, 64)        0         
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 12, 12, 64)        0         
+_________________________________________________________________
+flatten_1 (Flatten)          (None, 9216)              0         
+_________________________________________________________________
+dense_1 (Dense)              (None, 128)               1179776   
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 128)               0         
+_________________________________________________________________
+dense_2 (Dense)              (None, 10)                1290      
+=================================================================
+Total params: 1,199,882
+Trainable params: 1,199,882
+Non-trainable params: 0
+_________________________________________________________________
+None
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">plot_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">to_file</span><span class="o">=</span><span class="s">'model_plot.png'</span><span class="p">,</span> <span class="n">show_shapes</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">show_layer_names</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<center><img src="/Images/Blog/MNIST_Keras/model_plot.png" /></center>
+
+<p><br /></p>
+
+<h4 id="training-model">Training Model</h4>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span>
+          <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+          <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
+          <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+          <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">),</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">TQDMNotebookCallback</span><span class="p">()])</span>
+</code></pre>
+</div>
+
+<p><strong>Note:</strong> I am using CUDA enabled NVIDIA GPU GeForce GTX 750 Ti to train above model with 15 epochs which takes ~20 minutes to train. Training might be extremly slow on CPU, You can reduce number of epochs by updating variable ‘epochs’.</p>
+
+<p><br /></p>
+
+<h4 id="model-accuracy-on-train--test-data">Model Accuracy on train &amp; test data</h4>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s">'acc'</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[0.9004999999682108,
+ 0.9665333333651225,
+ 0.9753333333015441,
+ 0.9796666666348776,
+ 0.9816333333651225,
+ 0.9840333333015442,
+ 0.9850000000317891,
+ 0.9856666666666667,
+ 0.9871000000317891,
+ 0.9873333333651225,
+ 0.9885499999682108,
+ 0.9892166666666666,
+ 0.9893999999682108,
+ 0.9901,
+ 0.9895499999682108]
+</code></pre>
+</div>
+
+<p><em>Model accuracy improved from 90.04% in epoch 1 to 98.95% in epoch 15</em></p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">score</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Accuracy on test set: "</span><span class="p">,</span><span class="n">score</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Accuracy on test set:  0.9909
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h4 id="accuracy-plot">Accuracy Plot</h4>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s">'acc'</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s">'val_acc'</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'model accuracy'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'accuracy'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'epoch'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s">'train'</span><span class="p">,</span> <span class="s">'test'</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s">'upper left'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/MNIST_Keras/output_25_0.png" alt="png" /></p>
+
+<h4 id="loss-plot">Loss Plot</h4>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s">'loss'</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s">'val_loss'</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'model loss'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'loss'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'epoch'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s">'train'</span><span class="p">,</span> <span class="s">'test'</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s">'upper left'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/MNIST_Keras/output_27_0.png" alt="png" /></p>
+
+<p><br /></p>
+
+<h4 id="popular-cnn-architectures">Popular CNN Architectures</h4>
+
+<p>We achieved accuracy of 99.09% using our simple ConvNet architecture. There are many popular CNN architectures which can be used to achieve better accuracy on MNIST dataset, some of these architectures are:</p>
+
+<ol>
+  <li>
+    <p>VGG<sup>[4]</sup></p>
+  </li>
+  <li>
+    <p>Resnet<sup>[5]</sup></p>
+  </li>
+  <li>
+    <p>LeNet-5<sup>[6]</sup></p>
+  </li>
+</ol>
+
+<p>Many competitors also use ensemble of these models to get slightly better accuracy. In my next notebook I will discuss an ensemble method with VGG &amp; ResNet to improve our accuracy on MNIST.</p>
+
+<p><br /></p>
+
+<h4 id="refrences">Refrences:</h4>
+
+<ol>
+  <li>https://keras.io/</li>
+  <li>http://yann.lecun.com/exdb/mnist/</li>
+  <li>Wan, Li, et al. “Regularization of neural networks using dropconnect.” International Conference on Machine Learning. 2013.</li>
+  <li>Simonyan, Karen, and Andrew Zisserman. “Very deep convolutional networks for large-scale image recognition.” arXiv preprint arXiv:1409.1556 (2014).</li>
+  <li>He, Kaiming, et al. “Deep residual learning for image recognition.” Proceedings of the IEEE conference on computer vision and pattern recognition. 2016.</li>
+  <li>LeCun, Yann, et al. “Gradient-based learning applied to document recognition.” Proceedings of the IEEE 86.11 (1998): 2278-2324.</li>
+</ol>
+
+      </article>
+
+      
+        <div class="blog-tags">
+          Tags:
+          
+          
+            <a href="/tags#Deep Learning">Deep Learning</a>
+          
+            <a href="/tags#Python">Python</a>
+          
+            <a href="/tags#Image Analysis">Image Analysis</a>
+          
+            <a href="/tags#Machine Learning">Machine Learning</a>
+          
+            <a href="/tags#Keras">Keras</a>
+          
+            <a href="/tags#Tensorflow">Tensorflow</a>
+          
+          
+        </div>
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+  <!--- Share on Twitter -->
+    <a href="https://twitter.com/intent/tweet?text=MNIST+image+classification+with+CNN+%26+Keras+http://mohitatgithub.github.io/2018-03-28-MNIST-Image-Classification-with-CNN-&-Keras/"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fa fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+
+  
+  <!--- Share on Google Plus -->
+    <a href="https://plus.google.com/share?url=http://mohitatgithub.github.io/2018-03-28-MNIST-Image-Classification-with-CNN-&-Keras/"
+      class="btn btn-social-icon btn-google" title="Share on Google+">
+      <span class="fa fa-fw fa-google-plus" aria-hidden="true"></span>
+      <span class="sr-only">Google+</span>
+    </a>
+  
+
+  
+  <!--- Share on LinkedIn -->
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://mohitatgithub.github.io/2018-03-28-MNIST-Image-Classification-with-CNN-&-Keras/"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fa fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="/2018-03-25-Mushroom-Classification/" data-toggle="tooltip" data-placement="top" title="Mushroom Classification">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="/2018-04-03-Introduction-to-Language-Models/" data-toggle="tooltip" data-placement="top" title="Introduction to Language Models">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+        <div class="disqus-comments">
+          <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'mohitrathore';
+        /* ensure that pages with query string get the same discussion */
+            var url_parts = window.location.href.split("?");
+            var disqus_url = url_parts[0];
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+
+    <footer>
+  <div class="container beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links"><li><a href="/feed.xml" title="RSS"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">RSS</span>
+              </a>
+            </li><li><a href="mailto:mohitr1729@gmail.com" title="Email me"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Email me</span>
+              </a>
+            </li><li><a href="https://github.com/mohitatgithub" title="GitHub"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">GitHub</span>
+              </a>
+            </li><li><a href="https://linkedin.com/in/mohitr1729" title="LinkedIn"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">LinkedIn</span>
+              </a>
+            </li><li><a href="https://www.kaggle.com/mohitr" title="Kaggle"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-trophy fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Kaggle</span>
+              </a>
+            </li></ul>
+      <p class="copyright text-muted">
+      Mohit Rathore
+      &nbsp;&bull;&nbsp;
+      2019
+
+      
+
+      
+      </p>
+          <!-- Please don't remove this, keep my open source work credited :) -->
+    <p class="theme-by text-muted">
+      Theme by
+      <a href="http://deanattali.com/beautiful-jekyll/">beautiful-jekyll</a>
+    </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+    
+
+
+
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script>
+      	if (typeof jQuery == 'undefined') {
+      	  document.write('<script src="/js/jquery-1.11.2.min.js"></scr' + 'ipt>');
+      	}
+      </script>
+    
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+	<script src="/js/bootstrap.min.js"></script>
+    
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+	<script src="/js/main.js"></script>
+    
+  
+
+
+
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-114904532-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+	<!-- End Google Analytics -->
+
+
+  
+  </body>
+</html>

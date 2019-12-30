@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Beautiful Jekyll | MIT license | Copyright Dean Attali 2016 -->
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Mushroom Classification</title>
+
+  <meta name="author" content="Mohit Rathore" />
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Blog - Mohit Rathore" href="/feed.xml" />
+
+  
+
+  
+    
+      
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css" />
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    
+      <link rel="stylesheet" href="/css/bootstrap-social.css" />
+    
+      <link rel="stylesheet" href="/css/main.css" />
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+    
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+    
+  
+
+  
+
+  
+
+  
+
+    <!-- Facebook OpenGraph tags -->
+  
+
+  
+  <meta property="og:title" content="Mushroom Classification" />
+  
+
+   
+  <meta property="og:description" content="Image Source About dataset: I took this dataset from kaggle(https://www.kaggle.com/mig555/mushroom-classification/data) though it was originally contributed to the UCI Machine Learning repository nearly 30 years ago. This dataset includes descriptions of hypothetical samples corresponding to 23 species of gilled mushrooms in the Agaricus and Lepiota Family Mushroom drawn from The Audubon...">
+  
+
+
+  <meta property="og:type" content="website" />
+
+  
+  <meta property="og:url" content="http://mohitatgithub.github.io/2018-03-25-Mushroom-Classification/" />
+  <link rel="canonical" href="http://mohitatgithub.github.io/2018-03-25-Mushroom-Classification/" />
+  
+
+  
+
+
+  <!-- Twitter summary cards -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@" />
+  <meta name="twitter:creator" content="@" />
+
+  
+  <meta name="twitter:title" content="Mushroom Classification" />
+  
+
+  
+  <meta name="twitter:description" content="Image Source About dataset: I took this dataset from kaggle(https://www.kaggle.com/mig555/mushroom-classification/data) though it was originally contributed to the UCI Machine Learning repository nearly 30 years ago. This dataset includes descriptions of hypothetical samples corresponding to 23 species of gilled mushrooms in the Agaricus and Lepiota Family Mushroom drawn from The Audubon...">
+  
+
+  
+
+  
+
+</head>
+
+
+  <body>
+
+    
+  
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+        <a class="navbar-brand" href="http://mohitatgithub.github.io">Blog</a>
+      
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+            
+
+
+
+
+
+
+<a href="/aboutme">About Me</a>
+
+          </li>
+        
+        
+      </ul>
+    </div>
+
+	
+
+  </div>
+</nav>
+
+
+    <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Mushroom Classification</h1>
+		  
+		  
+		  
+		  <span class="post-meta">Posted on March 25, 2018</span>
+		  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+      
+
+      <article role="main" class="blog-post">
+        <p><br /></p>
+<center>
+<img src="/Images/Blog/mushroom.jpg" />
+<br />
+<a href="https://commons.wikimedia.org/wiki/File:Toadstools,_mushrooms,_fungi,_edible_and_poisonous_(Plate_VI)_(8537059334).jpg">Image Source</a>
+</center>
+<p><br /></p>
+
+<h4 id="about-dataset">About dataset:</h4>
+
+<p>I took this dataset from
+kaggle(<a href="https://www.kaggle.com/mig555/mushroom-classification/data">https://www.kaggle.com/mig555/mushroom-classification/data</a>)
+though it was originally contributed to the UCI Machine Learning
+repository nearly 30 years ago.</p>
+
+<p>This dataset includes descriptions of hypothetical samples corresponding
+to 23 species of gilled mushrooms in the Agaricus and Lepiota Family
+Mushroom drawn from The Audubon Society Field Guide to North American
+Mushrooms (1981). Each species is identified as definitely edible,
+definitely poisonous, or of unknown edibility and not recommended. This
+latter class was combined with the poisonous one. The Guide clearly
+states that there is no simple rule for determining the edibility of a
+mushroom; no rule like “leaflets three, let it be’’ for Poisonous Oak
+and Ivy.</p>
+
+<p><br /></p>
+
+<h4 id="problem--approach">Problem &amp; Approach:</h4>
+
+<p>To develop a binary classifier to predict which mushroom is poisonous &amp;
+which is edible. I will build a Naive Bayes classifier for prediction
+after basic EDA of data. Later I will also test Decision Tree &amp; Random
+Forest models on this dataset.</p>
+
+<p><br /></p>
+
+<h4 id="lets-check-data-structure">Lets check data structure</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>str(mushroom)
+
+## 'data.frame':    8124 obs. of  23 variables:
+##  $ class                   : Factor w/ 2 levels "e","p": 2 1 1 2 1 1 1 1 2 1 ...
+##  $ cap.shape               : Factor w/ 6 levels "b","c","f","k",..: 6 6 1 6 6 6 1 1 6 1 ...
+##  $ cap.surface             : Factor w/ 4 levels "f","g","s","y": 3 3 3 4 3 4 3 4 4 3 ...
+##  $ cap.color               : Factor w/ 10 levels "b","c","e","g",..: 5 10 9 9 4 10 9 9 9 10 ...
+##  $ bruises                 : Factor w/ 2 levels "f","t": 2 2 2 2 1 2 2 2 2 2 ...
+##  $ odor                    : Factor w/ 9 levels "a","c","f","l",..: 7 1 4 7 6 1 1 4 7 1 ...
+##  $ gill.attachment         : Factor w/ 2 levels "a","f": 2 2 2 2 2 2 2 2 2 2 ...
+##  $ gill.spacing            : Factor w/ 2 levels "c","w": 1 1 1 1 2 1 1 1 1 1 ...
+##  $ gill.size               : Factor w/ 2 levels "b","n": 2 1 1 2 1 1 1 1 2 1 ...
+##  $ gill.color              : Factor w/ 12 levels "b","e","g","h",..: 5 5 6 6 5 6 3 6 8 3 ...
+##  $ stalk.shape             : Factor w/ 2 levels "e","t": 1 1 1 1 2 1 1 1 1 1 ...
+##  $ stalk.root              : Factor w/ 5 levels "?","b","c","e",..: 4 3 3 4 4 3 3 3 4 3 ...
+##  $ stalk.surface.above.ring: Factor w/ 4 levels "f","k","s","y": 3 3 3 3 3 3 3 3 3 3 ...
+##  $ stalk.surface.below.ring: Factor w/ 4 levels "f","k","s","y": 3 3 3 3 3 3 3 3 3 3 ...
+##  $ stalk.color.above.ring  : Factor w/ 9 levels "b","c","e","g",..: 8 8 8 8 8 8 8 8 8 8 ...
+##  $ stalk.color.below.ring  : Factor w/ 9 levels "b","c","e","g",..: 8 8 8 8 8 8 8 8 8 8 ...
+##  $ veil.type               : Factor w/ 1 level "p": 1 1 1 1 1 1 1 1 1 1 ...
+##  $ veil.color              : Factor w/ 4 levels "n","o","w","y": 3 3 3 3 3 3 3 3 3 3 ...
+##  $ ring.number             : Factor w/ 3 levels "n","o","t": 2 2 2 2 2 2 2 2 2 2 ...
+##  $ ring.type               : Factor w/ 5 levels "e","f","l","n",..: 5 5 5 5 1 5 5 5 5 5 ...
+##  $ spore.print.color       : Factor w/ 9 levels "b","h","k","n",..: 3 4 4 3 4 3 3 4 3 3 ...
+##  $ population              : Factor w/ 6 levels "a","c","n","s",..: 4 3 3 4 1 3 3 4 5 4 ...
+##  $ habitat                 : Factor w/ 7 levels "d","g","l","m",..: 6 2 4 6 2 2 4 4 2 4 ...
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h4 id="renaming-all-entities">Renaming all entities</h4>
+
+<p><em>As you might have noticed all data entities are named by initials only.
+Lets convert these to proper names for clarity &amp; also convert all
+attributes to factors as all attributes are categorical here.</em></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>colnames(mushroom) &lt;- c("Edibility", "CapShape", "CapSurface",
+                        "CapColor", "Bruises", "Odor",
+                        "GillAttachment", "GillSpacing", "GillSize",
+                        "GillColor", "StalkShape", "StalkRoot",
+                        "StalkSurfaceAboveRing", "StalkSurfaceBelowRing", "StalkColorAboveRing",
+                        "StalkColorBelowRing", "VeilType", "VeilColor",
+                        "RingNumber", "RingType", "SporePrintColor",
+                        "Population", "Habitat")
+
+mushroom &lt;- mushroom %&gt;% map_df(function(.x) as.factor(.x))
+
+levels(mushroom$Edibility) &lt;- c("edible", "poisonous")
+levels(mushroom$CapShape) &lt;- c("bell", "conical", "flat", "knobbed", "sunken", "convex")
+levels(mushroom$CapColor) &lt;- c("buff", "cinnamon", "red", "gray", "brown", "pink",
+                                "green", "purple", "white", "yellow")
+levels(mushroom$CapSurface) &lt;- c("fibrous", "grooves", "scaly", "smooth")
+levels(mushroom$Bruises) &lt;- c("no", "yes")
+levels(mushroom$Odor) &lt;- c("almond", "creosote", "foul", "anise", "musty", "none", "pungent", "spicy", "fishy")
+levels(mushroom$GillAttachment) &lt;- c("attached", "free")
+levels(mushroom$GillSpacing) &lt;- c("close", "crowded")
+levels(mushroom$GillSize) &lt;- c("broad", "narrow")
+levels(mushroom$GillColor) &lt;- c("buff", "red", "gray", "chocolate", "black", "brown", "orange",
+                                 "pink", "green", "purple", "white", "yellow")
+levels(mushroom$StalkShape) &lt;- c("enlarging", "tapering")
+levels(mushroom$StalkRoot) &lt;- c("missing", "bulbous", "club", "equal", "rooted")
+levels(mushroom$StalkSurfaceAboveRing) &lt;- c("fibrous", "silky", "smooth", "scaly")
+levels(mushroom$StalkSurfaceBelowRing) &lt;- c("fibrous", "silky", "smooth", "scaly")
+levels(mushroom$StalkColorAboveRing) &lt;- c("buff", "cinnamon", "red", "gray", "brown", "pink",
+                                "green", "purple", "white", "yellow")
+levels(mushroom$StalkColorBelowRing) &lt;- c("buff", "cinnamon", "red", "gray", "brown", "pink",
+                                "green", "purple", "white", "yellow")
+levels(mushroom$VeilType) &lt;- "partial"
+levels(mushroom$VeilColor) &lt;- c("brown", "orange", "white", "yellow")
+levels(mushroom$RingNumber) &lt;- c("none", "one", "two")
+levels(mushroom$RingType) &lt;- c("evanescent", "flaring", "large", "none", "pendant")
+levels(mushroom$SporePrintColor) &lt;- c("buff", "chocolate", "black", "brown", "orange",
+                                        "green", "purple", "white", "yellow")
+levels(mushroom$Population) &lt;- c("abundant", "clustered", "numerous", "scattered", "several", "solitary")
+levels(mushroom$Habitat) &lt;- c("wood", "grasses", "leaves", "meadows", "paths", "urban", "waste")
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h4 id="lets-check-few-records-from-dataset-now">Lets check few records from dataset now</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>head(mushroom) %&gt;% kable("html") %&gt;%
+  kable_styling()
+</code></pre>
+</div>
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Edibility
+</th>
+<th style="text-align:left;">
+CapShape
+</th>
+<th style="text-align:left;">
+CapSurface
+</th>
+<th style="text-align:left;">
+CapColor
+</th>
+<th style="text-align:left;">
+Bruises
+</th>
+<th style="text-align:left;">
+Odor
+</th>
+<th style="text-align:left;">
+GillAttachment
+</th>
+<th style="text-align:left;">
+GillSpacing
+</th>
+<th style="text-align:left;">
+GillSize
+</th>
+<th style="text-align:left;">
+GillColor
+</th>
+<th style="text-align:left;">
+StalkShape
+</th>
+<th style="text-align:left;">
+StalkRoot
+</th>
+<th style="text-align:left;">
+StalkSurfaceAboveRing
+</th>
+<th style="text-align:left;">
+StalkSurfaceBelowRing
+</th>
+<th style="text-align:left;">
+StalkColorAboveRing
+</th>
+<th style="text-align:left;">
+StalkColorBelowRing
+</th>
+<th style="text-align:left;">
+VeilType
+</th>
+<th style="text-align:left;">
+VeilColor
+</th>
+<th style="text-align:left;">
+RingNumber
+</th>
+<th style="text-align:left;">
+RingType
+</th>
+<th style="text-align:left;">
+SporePrintColor
+</th>
+<th style="text-align:left;">
+Population
+</th>
+<th style="text-align:left;">
+Habitat
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+poisonous
+</td>
+<td style="text-align:left;">
+convex
+</td>
+<td style="text-align:left;">
+scaly
+</td>
+<td style="text-align:left;">
+brown
+</td>
+<td style="text-align:left;">
+yes
+</td>
+<td style="text-align:left;">
+pungent
+</td>
+<td style="text-align:left;">
+free
+</td>
+<td style="text-align:left;">
+close
+</td>
+<td style="text-align:left;">
+narrow
+</td>
+<td style="text-align:left;">
+black
+</td>
+<td style="text-align:left;">
+enlarging
+</td>
+<td style="text-align:left;">
+equal
+</td>
+<td style="text-align:left;">
+smooth
+</td>
+<td style="text-align:left;">
+smooth
+</td>
+<td style="text-align:left;">
+purple
+</td>
+<td style="text-align:left;">
+purple
+</td>
+<td style="text-align:left;">
+partial
+</td>
+<td style="text-align:left;">
+white
+</td>
+<td style="text-align:left;">
+one
+</td>
+<td style="text-align:left;">
+pendant
+</td>
+<td style="text-align:left;">
+black
+</td>
+<td style="text-align:left;">
+scattered
+</td>
+<td style="text-align:left;">
+urban
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+edible
+</td>
+<td style="text-align:left;">
+convex
+</td>
+<td style="text-align:left;">
+scaly
+</td>
+<td style="text-align:left;">
+yellow
+</td>
+<td style="text-align:left;">
+yes
+</td>
+<td style="text-align:left;">
+almond
+</td>
+<td style="text-align:left;">
+free
+</td>
+<td style="text-align:left;">
+close
+</td>
+<td style="text-align:left;">
+broad
+</td>
+<td style="text-align:left;">
+black
+</td>
+<td style="text-align:left;">
+enlarging
+</td>
+<td style="text-align:left;">
+club
+</td>
+<td style="text-align:left;">
+smooth
+</td>
+<td style="text-align:left;">
+smooth
+</td>
+<td style="text-align:left;">
+purple
+</td>
+<td style="text-align:left;">
+purple
+</td>
+<td style="text-align:left;">
+partial
+</td>
+<td style="text-align:left;">
+white
+</td>
+<td style="text-align:left;">
+one
+</td>
+<td style="text-align:left;">
+pendant
+</td>
+<td style="text-align:left;">
+brown
+</td>
+<td style="text-align:left;">
+numerous
+</td>
+<td style="text-align:left;">
+grasses
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+edible
+</td>
+<td style="text-align:left;">
+bell
+</td>
+<td style="text-align:left;">
+scaly
+</td>
+<td style="text-align:left;">
+white
+</td>
+<td style="text-align:left;">
+yes
+</td>
+<td style="text-align:left;">
+anise
+</td>
+<td style="text-align:left;">
+free
+</td>
+<td style="text-align:left;">
+close
+</td>
+<td style="text-align:left;">
+broad
+</td>
+<td style="text-align:left;">
+brown
+</td>
+<td style="text-align:left;">
+enlarging
+</td>
+<td style="text-align:left;">
+club
+</td>
+<td style="text-align:left;">
+smooth
+</td>
+<td style="text-align:left;">
+smooth
+</td>
+<td style="text-align:left;">
+purple
+</td>
+<td style="text-align:left;">
+purple
+</td>
+<td style="text-align:left;">
+partial
+</td>
+<td style="text-align:left;">
+white
+</td>
+<td style="text-align:left;">
+one
+</td>
+<td style="text-align:left;">
+pendant
+</td>
+<td style="text-align:left;">
+brown
+</td>
+<td style="text-align:left;">
+numerous
+</td>
+<td style="text-align:left;">
+meadows
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+poisonous
+</td>
+<td style="text-align:left;">
+convex
+</td>
+<td style="text-align:left;">
+smooth
+</td>
+<td style="text-align:left;">
+white
+</td>
+<td style="text-align:left;">
+yes
+</td>
+<td style="text-align:left;">
+pungent
+</td>
+<td style="text-align:left;">
+free
+</td>
+<td style="text-align:left;">
+close
+</td>
+<td style="text-align:left;">
+narrow
+</td>
+<td style="text-align:left;">
+brown
+</td>
+<td style="text-align:left;">
+enlarging
+</td>
+<td style="text-align:left;">
+equal
+</td>
+<td style="text-align:left;">
+smooth
+</td>
+<td style="text-align:left;">
+smooth
+</td>
+<td style="text-align:left;">
+purple
+</td>
+<td style="text-align:left;">
+purple
+</td>
+<td style="text-align:left;">
+partial
+</td>
+<td style="text-align:left;">
+white
+</td>
+<td style="text-align:left;">
+one
+</td>
+<td style="text-align:left;">
+pendant
+</td>
+<td style="text-align:left;">
+black
+</td>
+<td style="text-align:left;">
+scattered
+</td>
+<td style="text-align:left;">
+urban
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+edible
+</td>
+<td style="text-align:left;">
+convex
+</td>
+<td style="text-align:left;">
+scaly
+</td>
+<td style="text-align:left;">
+gray
+</td>
+<td style="text-align:left;">
+no
+</td>
+<td style="text-align:left;">
+none
+</td>
+<td style="text-align:left;">
+free
+</td>
+<td style="text-align:left;">
+crowded
+</td>
+<td style="text-align:left;">
+broad
+</td>
+<td style="text-align:left;">
+black
+</td>
+<td style="text-align:left;">
+tapering
+</td>
+<td style="text-align:left;">
+equal
+</td>
+<td style="text-align:left;">
+smooth
+</td>
+<td style="text-align:left;">
+smooth
+</td>
+<td style="text-align:left;">
+purple
+</td>
+<td style="text-align:left;">
+purple
+</td>
+<td style="text-align:left;">
+partial
+</td>
+<td style="text-align:left;">
+white
+</td>
+<td style="text-align:left;">
+one
+</td>
+<td style="text-align:left;">
+evanescent
+</td>
+<td style="text-align:left;">
+brown
+</td>
+<td style="text-align:left;">
+abundant
+</td>
+<td style="text-align:left;">
+grasses
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+edible
+</td>
+<td style="text-align:left;">
+convex
+</td>
+<td style="text-align:left;">
+smooth
+</td>
+<td style="text-align:left;">
+yellow
+</td>
+<td style="text-align:left;">
+yes
+</td>
+<td style="text-align:left;">
+almond
+</td>
+<td style="text-align:left;">
+free
+</td>
+<td style="text-align:left;">
+close
+</td>
+<td style="text-align:left;">
+broad
+</td>
+<td style="text-align:left;">
+brown
+</td>
+<td style="text-align:left;">
+enlarging
+</td>
+<td style="text-align:left;">
+club
+</td>
+<td style="text-align:left;">
+smooth
+</td>
+<td style="text-align:left;">
+smooth
+</td>
+<td style="text-align:left;">
+purple
+</td>
+<td style="text-align:left;">
+purple
+</td>
+<td style="text-align:left;">
+partial
+</td>
+<td style="text-align:left;">
+white
+</td>
+<td style="text-align:left;">
+one
+</td>
+<td style="text-align:left;">
+pendant
+</td>
+<td style="text-align:left;">
+black
+</td>
+<td style="text-align:left;">
+numerous
+</td>
+<td style="text-align:left;">
+grasses
+</td>
+</tr>
+</tbody>
+</table>
+<p><br /></p>
+
+<h4 id="lets-check-the-structure-of-data-now">Lets check the structure of data now</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>str(mushroom)
+
+## Classes 'tbl_df', 'tbl' and 'data.frame':    8124 obs. of  23 variables:
+##  $ Edibility            : Factor w/ 2 levels "edible","poisonous": 2 1 1 2 1 1 1 1 2 1 ...
+##  $ CapShape             : Factor w/ 6 levels "bell","conical",..: 6 6 1 6 6 6 1 1 6 1 ...
+##  $ CapSurface           : Factor w/ 4 levels "fibrous","grooves",..: 3 3 3 4 3 4 3 4 4 3 ...
+##  $ CapColor             : Factor w/ 10 levels "buff","cinnamon",..: 5 10 9 9 4 10 9 9 9 10 ...
+##  $ Bruises              : Factor w/ 2 levels "no","yes": 2 2 2 2 1 2 2 2 2 2 ...
+##  $ Odor                 : Factor w/ 9 levels "almond","creosote",..: 7 1 4 7 6 1 1 4 7 1 ...
+##  $ GillAttachment       : Factor w/ 2 levels "attached","free": 2 2 2 2 2 2 2 2 2 2 ...
+##  $ GillSpacing          : Factor w/ 2 levels "close","crowded": 1 1 1 1 2 1 1 1 1 1 ...
+##  $ GillSize             : Factor w/ 2 levels "broad","narrow": 2 1 1 2 1 1 1 1 2 1 ...
+##  $ GillColor            : Factor w/ 12 levels "buff","red","gray",..: 5 5 6 6 5 6 3 6 8 3 ...
+##  $ StalkShape           : Factor w/ 2 levels "enlarging","tapering": 1 1 1 1 2 1 1 1 1 1 ...
+##  $ StalkRoot            : Factor w/ 5 levels "missing","bulbous",..: 4 3 3 4 4 3 3 3 4 3 ...
+##  $ StalkSurfaceAboveRing: Factor w/ 4 levels "fibrous","silky",..: 3 3 3 3 3 3 3 3 3 3 ...
+##  $ StalkSurfaceBelowRing: Factor w/ 4 levels "fibrous","silky",..: 3 3 3 3 3 3 3 3 3 3 ...
+##  $ StalkColorAboveRing  : Factor w/ 10 levels "buff","cinnamon",..: 8 8 8 8 8 8 8 8 8 8 ...
+##  $ StalkColorBelowRing  : Factor w/ 10 levels "buff","cinnamon",..: 8 8 8 8 8 8 8 8 8 8 ...
+##  $ VeilType             : Factor w/ 1 level "partial": 1 1 1 1 1 1 1 1 1 1 ...
+##  $ VeilColor            : Factor w/ 4 levels "brown","orange",..: 3 3 3 3 3 3 3 3 3 3 ...
+##  $ RingNumber           : Factor w/ 3 levels "none","one","two": 2 2 2 2 2 2 2 2 2 2 ...
+##  $ RingType             : Factor w/ 5 levels "evanescent","flaring",..: 5 5 5 5 1 5 5 5 5 5 ...
+##  $ SporePrintColor      : Factor w/ 9 levels "buff","chocolate",..: 3 4 4 3 4 3 3 4 3 3 ...
+##  $ Population           : Factor w/ 6 levels "abundant","clustered",..: 4 3 3 4 1 3 3 4 5 4 ...
+##  $ Habitat              : Factor w/ 7 levels "wood","grasses",..: 6 2 4 6 2 2 4 4 2 4 ...
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h4 id="lets-find-out-more-about-each-category-of-each-attribute">Lets find out more about each category of each attribute</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>summary(mushroom)
+
+##      Edibility       CapShape      CapSurface      CapColor    Bruises   
+##  edible   :4208   bell   : 452   fibrous:2320   brown  :2284   no :4748  
+##  poisonous:3916   conical:   4   grooves:   4   gray   :1840   yes:3376  
+##                   flat   :3152   scaly  :2556   red    :1500             
+##                   knobbed: 828   smooth :3244   yellow :1072             
+##                   sunken :  32                  white  :1040             
+##                   convex :3656                  buff   : 168             
+##                                                 (Other): 220             
+##       Odor       GillAttachment  GillSpacing     GillSize   
+##  none   :3528   attached: 210   close  :6812   broad :5612  
+##  foul   :2160   free    :7914   crowded:1312   narrow:2512  
+##  spicy  : 576                                               
+##  fishy  : 576                                               
+##  almond : 400                                               
+##  anise  : 400                                               
+##  (Other): 484                                               
+##      GillColor        StalkShape     StalkRoot    StalkSurfaceAboveRing
+##  buff     :1728   enlarging:3516   missing:2480   fibrous: 552         
+##  pink     :1492   tapering :4608   bulbous:3776   silky  :2372         
+##  white    :1202                    club   : 556   smooth :5176         
+##  brown    :1048                    equal  :1120   scaly  :  24         
+##  gray     : 752                    rooted : 192                        
+##  chocolate: 732                                                        
+##  (Other)  :1170                                                        
+##  StalkSurfaceBelowRing StalkColorAboveRing StalkColorBelowRing
+##  fibrous: 600          purple :4464        purple :4384       
+##  silky  :2304          green  :1872        green  :1872       
+##  smooth :4936          gray   : 576        gray   : 576       
+##  scaly  : 284          brown  : 448        brown  : 512       
+##                        buff   : 432        buff   : 432       
+##                        pink   : 192        pink   : 192       
+##                        (Other): 140        (Other): 156       
+##     VeilType     VeilColor    RingNumber        RingType   
+##  partial:8124   brown :  96   none:  36   evanescent:2776  
+##                 orange:  96   one :7488   flaring   :  48  
+##                 white :7924   two : 600   large     :1296  
+##                 yellow:   8               none      :  36  
+##                                           pendant   :3968  
+##                                                            
+##                                                            
+##   SporePrintColor     Population      Habitat    
+##  white    :2388   abundant : 384   wood   :3148  
+##  brown    :1968   clustered: 340   grasses:2148  
+##  black    :1872   numerous : 400   leaves : 832  
+##  chocolate:1632   scattered:1248   meadows: 292  
+##  green    :  72   several  :4040   paths  :1144  
+##  buff     :  48   solitary :1712   urban  : 368  
+##  (Other)  : 144                    waste  : 192
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h4 id="checking-frequency-of-mushroom-classes">Checking Frequency of mushroom classes</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>freq &lt;- function(x){table(x)/length(x)*100}
+freq(mushroom$Edibility)
+
+## x
+##    edible poisonous
+##  51.79714  48.20286
+</code></pre>
+</div>
+
+<p><em>Poisonous &amp; Edible classes are almost balanced.</em></p>
+
+<p><br /></p>
+
+<h4 id="bar-charts-comparing-edibility-across-all-mushroom-features">Bar Charts comparing Edibility across all mushroom features</h4>
+
+<p><img src="/Images/Blog/mushrooms_files/figure-markdown_strict/unnamed-chunk-7-1.png" alt="" /> <br />
+<img src="/Images/Blog/mushrooms_files/figure-markdown_strict/unnamed-chunk-8-1.png" alt="" /> <br />
+<img src="/Images/Blog/mushrooms_files/figure-markdown_strict/unnamed-chunk-9-1.png" alt="" /> <br />
+<img src="/Images/Blog/mushrooms_files/figure-markdown_strict/unnamed-chunk-10-1.png" alt="" /> <br /></p>
+
+<h3 id="classifying-mushrooms">Classifying Mushrooms:</h3>
+
+<p><br /></p>
+
+<h4 id="creating-train-test-splits">Creating Train Test Splits</h4>
+
+<p><em>I will take 70% (5386 mushrooms) sample data for training &amp; 30% (2438
+mushrooms) for testing.</em></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>set.seed(2)
+s=sample(1:nrow(mushroom),0.7*nrow(mushroom))
+mush_train=mushroom[s,]
+mush_test=mushroom[-s,]
+mush_test1&lt;- mush_test[, -1]
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h4 id="creating-model-using-naive-bayes-classifier">Creating Model using Naive Bayes Classifier</h4>
+
+<p><em>Naive Bayes classifier is based on Bayes Theorem with an assumption of
+independence among predictors. In simple terms, a Naive Bayes classifier
+assumes that the presence of a particular feature in a class is
+unrelated to the presence of any other feature.</em></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>model &lt;- naiveBayes(Edibility ~. , data = mush_train)
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h4 id="predicting-mushroom-class-on-testset">Predicting Mushroom Class on Testset</h4>
+
+<p><em>Lets test our model on remaining 30% test data</em></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>pred &lt;- predict(model, mush_test1)
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h4 id="model-evaluation">Model Evaluation</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>confusionMatrix(pred,mush_test$Edibility)
+
+## Confusion Matrix and Statistics
+##
+##            Reference
+## Prediction  edible poisonous
+##   edible      1245       147
+##   poisonous      9      1037
+##                                           
+##                Accuracy : 0.936           
+##                  95% CI : (0.9256, 0.9454)
+##     No Information Rate : 0.5144          
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                                           
+##                   Kappa : 0.8715          
+##  Mcnemar's Test P-Value : &lt; 2.2e-16       
+##                                           
+##             Sensitivity : 0.9928          
+##             Specificity : 0.8758          
+##          Pos Pred Value : 0.8944          
+##          Neg Pred Value : 0.9914          
+##              Prevalence : 0.5144          
+##          Detection Rate : 0.5107          
+##    Detection Prevalence : 0.5710          
+##       Balanced Accuracy : 0.9343          
+##                                           
+##        'Positive' Class : edible          
+##
+</code></pre>
+</div>
+
+<p><em>In case of mushroom classification few False Negatives are tolrable but
+even a single False Positive can take someones life. We measure these as
+Senstivity &amp; Specificity.</em></p>
+
+<p><em>We are getting Senstivity(True Positive Rate) of 99.28% which is good
+as it represent our prediction for edible mushrooms &amp; only .7% False
+negatives(9 Mushrooms).</em></p>
+
+<p><em>But Specificity(True Negative Rate) or our ability to classify Poisnous
+mushrooms is 87.58%, which is not so good as more then 10% Poisnous
+mushrooms may get identified as Edible. This model have 147 False
+Positves which is not acceptable. so tets try a decision tree based
+model now.</em></p>
+
+<p><br /></p>
+
+<h4 id="creating-a-decision-tree-based-classifier">Creating a Decision Tree based Classifier</h4>
+
+<p><em>Decision tree is a type of supervised learning algorithm works for both
+categorical and continuous input and output variables. In this
+technique, we split the population or sample into two or more
+homogeneous sets (or sub-populations) based on most significant splitter
+/ differentiator in input variables.</em></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>tree.model &lt;- rpart(Edibility ~ .,data = mush_train,method = "class",parms = list(split ="information"))
+#prp(tree.model)
+#summary(tree.model)
+rpart.plot(tree.model,extra =  3,fallen.leaves = T)
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/mushrooms_files/figure-markdown_strict/unnamed-chunk-15-1.png" alt="" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>tree.predict &lt;- predict(tree.model, mush_test[,-c(1)], type = "class")
+confusionMatrix(mush_test$Edibility, tree.predict)
+
+## Confusion Matrix and Statistics
+##
+##            Reference
+## Prediction  edible poisonous
+##   edible      1254         0
+##   poisonous     16      1168
+##                                           
+##                Accuracy : 0.9934          
+##                  95% CI : (0.9894, 0.9962)
+##     No Information Rate : 0.5209          
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                                           
+##                   Kappa : 0.9869          
+##  Mcnemar's Test P-Value : 0.0001768       
+##                                           
+##             Sensitivity : 0.9874          
+##             Specificity : 1.0000          
+##          Pos Pred Value : 1.0000          
+##          Neg Pred Value : 0.9865          
+##              Prevalence : 0.5209          
+##          Detection Rate : 0.5144          
+##    Detection Prevalence : 0.5144          
+##       Balanced Accuracy : 0.9937          
+##                                           
+##        'Positive' Class : edible          
+##
+</code></pre>
+</div>
+
+<p><em>This model gives us an ideal Specificity of 1 but Decision Trees are
+prone to overfitting &amp; so model may perform poorly on test data. Also
+algorithm have chosen only 2 attributes Order &amp; SporePrintColor for
+making this prediction which might be questionable. Lets also try a
+final model called Random Forest which is robust &amp; often gives a more
+generalisable model.</em></p>
+
+<p><br /></p>
+
+<h4 id="creating-random-forest-classifier">Creating Random Forest Classifier</h4>
+
+<p><em>Random forests are an ensemble learning method for classification,
+regression and other tasks, that operate by constructing a multitude of
+decision trees at training time and outputting the class that is the
+mode of the classes (classification) or mean prediction (regression) of
+the individual trees.</em></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>set.seed(1234)
+rf_model &lt;- randomForest(Edibility~.,data=mush_train, importance = TRUE, ntree = 1000)
+rf_model
+
+##
+## Call:
+##  randomForest(formula = Edibility ~ ., data = mush_train, importance = TRUE,      ntree = 1000)
+##                Type of random forest: classification
+##                      Number of trees: 1000
+## No. of variables tried at each split: 4
+##
+##         OOB estimate of  error rate: 0%
+## Confusion matrix:
+##           edible poisonous class.error
+## edible      2954         0           0
+## poisonous      0      2732           0
+
+varImpPlot(rf_model)
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/mushrooms_files/figure-markdown_strict/unnamed-chunk-16-1.png" alt="" /></p>
+
+<p><em>Random forest of 1000 trees have also identified Odor &amp; SporePrintColor
+as most important variables. Lets check its predictions on test data
+now.</em></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>rf_prediction &lt;- predict(rf_model, mush_test[,-c(1)])
+confusionMatrix(mush_test$Edibility, rf_prediction)
+
+## Confusion Matrix and Statistics
+##
+##            Reference
+## Prediction  edible poisonous
+##   edible      1254         0
+##   poisonous      0      1184
+##                                      
+##                Accuracy : 1          
+##                  95% CI : (0.9985, 1)
+##     No Information Rate : 0.5144     
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16  
+##                                      
+##                   Kappa : 1          
+##  Mcnemar's Test P-Value : NA         
+##                                      
+##             Sensitivity : 1.0000     
+##             Specificity : 1.0000     
+##          Pos Pred Value : 1.0000     
+##          Neg Pred Value : 1.0000     
+##              Prevalence : 0.5144     
+##          Detection Rate : 0.5144     
+##    Detection Prevalence : 0.5144     
+##       Balanced Accuracy : 1.0000     
+##                                      
+##        'Positive' Class : edible     
+##
+</code></pre>
+</div>
+
+<p><em>We are getting 100% Accuracy, Sensitivity &amp; Specificity now. I am not
+sure if this is correct. Please share your feedback on errors &amp;
+improvemnts. Thanks for reading this notebook.</em> <br /></p>
+
+      </article>
+
+      
+        <div class="blog-tags">
+          Tags:
+          
+          
+            <a href="/tags#R">R</a>
+          
+            <a href="/tags#EDA">EDA</a>
+          
+            <a href="/tags#Machine Learning">Machine Learning</a>
+          
+          
+        </div>
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+  <!--- Share on Twitter -->
+    <a href="https://twitter.com/intent/tweet?text=Mushroom+Classification+http://mohitatgithub.github.io/2018-03-25-Mushroom-Classification/"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fa fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+
+  
+  <!--- Share on Google Plus -->
+    <a href="https://plus.google.com/share?url=http://mohitatgithub.github.io/2018-03-25-Mushroom-Classification/"
+      class="btn btn-social-icon btn-google" title="Share on Google+">
+      <span class="fa fa-fw fa-google-plus" aria-hidden="true"></span>
+      <span class="sr-only">Google+</span>
+    </a>
+  
+
+  
+  <!--- Share on LinkedIn -->
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://mohitatgithub.github.io/2018-03-25-Mushroom-Classification/"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fa fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="/2018-03-20-Building-a-Beer-Recommendation-System/" data-toggle="tooltip" data-placement="top" title="Beer Recommendation System">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="/2018-03-28-MNIST-Image-Classification-with-CNN-&-Keras/" data-toggle="tooltip" data-placement="top" title="MNIST image classification with CNN & Keras">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+        <div class="disqus-comments">
+          <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'mohitrathore';
+        /* ensure that pages with query string get the same discussion */
+            var url_parts = window.location.href.split("?");
+            var disqus_url = url_parts[0];
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+
+    <footer>
+  <div class="container beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links"><li><a href="/feed.xml" title="RSS"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">RSS</span>
+              </a>
+            </li><li><a href="mailto:mohitr1729@gmail.com" title="Email me"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Email me</span>
+              </a>
+            </li><li><a href="https://github.com/mohitatgithub" title="GitHub"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">GitHub</span>
+              </a>
+            </li><li><a href="https://linkedin.com/in/mohitr1729" title="LinkedIn"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">LinkedIn</span>
+              </a>
+            </li><li><a href="https://www.kaggle.com/mohitr" title="Kaggle"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-trophy fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Kaggle</span>
+              </a>
+            </li></ul>
+      <p class="copyright text-muted">
+      Mohit Rathore
+      &nbsp;&bull;&nbsp;
+      2019
+
+      
+
+      
+      </p>
+          <!-- Please don't remove this, keep my open source work credited :) -->
+    <p class="theme-by text-muted">
+      Theme by
+      <a href="http://deanattali.com/beautiful-jekyll/">beautiful-jekyll</a>
+    </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+    
+
+
+
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script>
+      	if (typeof jQuery == 'undefined') {
+      	  document.write('<script src="/js/jquery-1.11.2.min.js"></scr' + 'ipt>');
+      	}
+      </script>
+    
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+	<script src="/js/bootstrap.min.js"></script>
+    
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+	<script src="/js/main.js"></script>
+    
+  
+
+
+
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-114904532-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+	<!-- End Google Analytics -->
+
+
+  
+  </body>
+</html>

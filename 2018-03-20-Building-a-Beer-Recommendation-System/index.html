@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Beautiful Jekyll | MIT license | Copyright Dean Attali 2016 -->
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Beer Recommendation System</title>
+
+  <meta name="author" content="Mohit Rathore" />
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Blog - Mohit Rathore" href="/feed.xml" />
+
+  
+
+  
+    
+      
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css" />
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    
+      <link rel="stylesheet" href="/css/bootstrap-social.css" />
+    
+      <link rel="stylesheet" href="/css/main.css" />
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+    
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+    
+  
+
+  
+
+  
+
+  
+
+    <!-- Facebook OpenGraph tags -->
+  
+
+  
+  <meta property="og:title" content="Beer Recommendation System" />
+  
+
+   
+  <meta property="og:description" content="Image Source Problem Statement To build a recommendation system using collaborative filtering, where customers will be recommended the beer that they are most likely to buy using given dataset of half million beer reviews. Goals of Assignment: Choose only those beers that have at least N number of reviews, Find...">
+  
+
+
+  <meta property="og:type" content="website" />
+
+  
+  <meta property="og:url" content="http://mohitatgithub.github.io/2018-03-20-Building-a-Beer-Recommendation-System/" />
+  <link rel="canonical" href="http://mohitatgithub.github.io/2018-03-20-Building-a-Beer-Recommendation-System/" />
+  
+
+  
+
+
+  <!-- Twitter summary cards -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@" />
+  <meta name="twitter:creator" content="@" />
+
+  
+  <meta name="twitter:title" content="Beer Recommendation System" />
+  
+
+  
+  <meta name="twitter:description" content="Image Source Problem Statement To build a recommendation system using collaborative filtering, where customers will be recommended the beer that they are most likely to buy using given dataset of half million beer reviews. Goals of Assignment: Choose only those beers that have at least N number of reviews, Find...">
+  
+
+  
+
+  
+
+</head>
+
+
+  <body>
+
+    
+  
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+        <a class="navbar-brand" href="http://mohitatgithub.github.io">Blog</a>
+      
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+            
+
+
+
+
+
+
+<a href="/aboutme">About Me</a>
+
+          </li>
+        
+        
+      </ul>
+    </div>
+
+	
+
+  </div>
+</nav>
+
+
+    <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Beer Recommendation System</h1>
+		  
+		  
+		  
+		  <span class="post-meta">Posted on March 20, 2018</span>
+		  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+      
+
+      <article role="main" class="blog-post">
+        <center>
+<img src="/Images/Blog/beer.jpg" width="520" height="350" />
+<br />
+<a href="https://commons.wikimedia.org/wiki/File:Fran%C3%A7ois_Louis_Jaques_Paysans_fribourgeois_au_bistrot.jpg">Image Source</a>
+</center>
+
+<h4 id="problem-statement">Problem Statement</h4>
+
+<p>To build a recommendation system using collaborative filtering, where
+customers will be recommended the beer that they are most likely to buy
+using given dataset of half million beer reviews.</p>
+
+<h4 id="goals-of-assignment">Goals of Assignment:</h4>
+
+<ul>
+  <li>Choose only those beers that have at least N number of reviews, Find
+N using EDA.</li>
+  <li>Clean data an find average beer &amp; user ratings.</li>
+  <li>Find similarity between the first 10 beers &amp; first 10 users &amp; plot
+this similarity matrix.</li>
+  <li>Evaluate Item Based &amp; User Based Collaborative Filtering Algorithms
+using ‘split’ and ‘cross-validation’ evaluation schemes.</li>
+  <li>Recommend Top 5 beers to users “cokes”, “genog” &amp; “giblet”.</li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="dataset-preview">Dataset Preview</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>head(beer) %&gt;% kable("html") %&gt;%
+  kable_styling()
+</code></pre>
+</div>
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+beer\_beerid
+</th>
+<th style="text-align:left;">
+review\_profilename
+</th>
+<th style="text-align:right;">
+review\_overall
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+48215
+</td>
+<td style="text-align:left;">
+stcules
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+52159
+</td>
+<td style="text-align:left;">
+oline73
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+52159
+</td>
+<td style="text-align:left;">
+alpinebryant
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+52159
+</td>
+<td style="text-align:left;">
+rawthar
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+52159
+</td>
+<td style="text-align:left;">
+RangerClegg
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+58046
+</td>
+<td style="text-align:left;">
+mikedrinksbeer2
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+</tr>
+</tbody>
+</table>
+<p><em>Dataset contains 3 attributes Beer Id, Reviewer Name &amp; Rating given by
+reviewer. Total 475984 reviews are given.</em></p>
+
+<p><br /></p>
+
+<h4 id="data-structure">Data Structure</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>str(beer)
+
+## 'data.frame':    475984 obs. of  3 variables:
+##  $ beer_beerid       : int  48215 52159 52159 52159 52159 58046 58046 58046 58046 58046 ...
+##  $ review_profilename: Factor w/ 22498 levels "","0110x011",..: 19293 15474 675 16851 16798 13843 5629 2680 1473 15351 ...
+##  $ review_overall    : num  3 3 3 4 3.5 4.5 4 4.5 4.5 4 ...
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h4 id="data-summary">Data Summary</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>summary(beer)
+
+##   beer_beerid         review_profilename review_overall
+##  Min.   :    3   northyorksammy:  1846   Min.   :0.000  
+##  1st Qu.: 1716   mikesgroove   :  1379   1st Qu.:3.500  
+##  Median :13892   BuckeyeNation :  1338   Median :4.000  
+##  Mean   :21661   Thorpe429     :  1072   Mean   :3.815  
+##  3rd Qu.:39397   ChainGangGuy  :  1046   3rd Qu.:4.500  
+##  Max.   :77317   NeroFiddled   :  1031   Max.   :5.000  
+##                  (Other)       :468272
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h4 id="missing-values">Missing Values</h4>
+
+<p><em>Total 100 reviews have empty review_profilename.</em></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>nrow(beer[(is.na(beer$review_profilename) | beer$review_profilename==""), ])
+
+## [1] 100
+</code></pre>
+</div>
+
+<p><em>Updating beer datset removing empty review_profilename.</em></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>beer&lt;-beer[!(beer$review_profilename==""), ]
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h4 id="checking-duplicates">Checking Duplicates</h4>
+
+<p><em>Checking for duplicates where both item and user are duplicated or same
+user gave multiple ratings to same beer.</em></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>beer[!(duplicated(beer[c("beer_beerid","review_profilename")]) | duplicated(beer[c("beer_beerid","review_profilename")], fromLast = TRUE)), ] %&gt;% nrow()
+
+## [1] 473055
+
+beer %&gt;% distinct(beer_beerid,review_profilename,.keep_all = TRUE) %&gt;% nrow()
+
+## [1] 474462
+</code></pre>
+</div>
+
+<p><em>474462 distict reviews</em></p>
+
+<p><em>Removing duplicates having both beer &amp; user duplicated, this will
+ensure that no 2 reviews from single user to same beer are counted &amp;
+cumulate.</em></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>beer&lt;-distinct(beer,beer_beerid,review_profilename,.keep_all = TRUE)
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h3 id="i-data-prepration">I. Data Prepration</h3>
+
+<h4 id="1-choose-only-those-beers-that-have-at-least-n-number-of-reviews">1. Choose only those beers that have at least N number of reviews</h4>
+
+<p>Lets find all distinct beers &amp; total reviews they received</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>beer_reviews_count &lt;- beer %&gt;% group_by(beer_beerid) %&gt;% summarise(total_beer_reviews=n())
+dim(beer_reviews_count)
+
+## [1] 40304     2
+</code></pre>
+</div>
+
+<p><em>Total 40308 distinct beers.</em></p>
+
+<p>Lets sort these beers by reviews</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code> beer_reviews_count[with(beer_reviews_count, order(total_beer_reviews,decreasing = TRUE)), ]
+
+## # A tibble: 40,304 x 2
+##    beer_beerid total_beer_reviews
+##          &lt;int&gt;              &lt;int&gt;
+##  1        2093                977
+##  2         412                966
+##  3        1904                902
+##  4        1093                840
+##  5          92                812
+##  6        4083                798
+##  7         276                788
+##  8        7971                778
+##  9          88                755
+## 10        1013                750
+## # ... with 40,294 more rows
+
+summary(beer_reviews_count)
+
+##   beer_beerid    total_beer_reviews
+##  Min.   :    3   Min.   :  1.00    
+##  1st Qu.:16880   1st Qu.:  1.00    
+##  Median :37366   Median :  2.00    
+##  Mean   :36973   Mean   : 11.77    
+##  3rd Qu.:56234   3rd Qu.:  5.00    
+##  Max.   :77317   Max.   :977.00
+</code></pre>
+</div>
+
+<p><em>Beers have reviews count in range of 1 to 987, beer 2093 have highest
+number of reviews(987).</em></p>
+
+<p><br /></p>
+
+<p>Lets also count number of distinct users</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>beer %&gt;% group_by(review_profilename) %&gt;% summarise(total_user_reviews=n()) %&gt;% nrow()
+
+## [1] 22497
+</code></pre>
+</div>
+
+<p><em>22497 distinct users</em></p>
+
+<p><br /></p>
+
+<p>Lets now check which user have reviewed maximum beers</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>beer %&gt;% group_by(review_profilename) %&gt;% summarise(user_review_count=n()) %&gt;% top_n(1)
+
+## Selecting by user_review_count
+
+## # A tibble: 1 x 2
+##   review_profilename user_review_count
+##               &lt;fctr&gt;             &lt;int&gt;
+## 1     northyorksammy              1842
+</code></pre>
+</div>
+
+<p><em>user: northyorksammy have given max reviews:1842</em></p>
+
+<p><br /></p>
+
+<p>To find an ideal value of N its important that we choose beers hacing
+large enough number of reviews to avoid cold start problem.</p>
+
+<p>So Lets further analyse beers by number of reviews each one have
+received. lets start with all beers with single review.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>qplot(beer_reviews_count$total_beer_reviews, geom = "histogram",xlab="Total Reviews")
+
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-13-1.png" alt="" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>beer_reviews_count %&gt;% subset(total_beer_reviews==1) %&gt;% dim()
+
+## [1] 18080     2
+</code></pre>
+</div>
+
+<p><em>#So 18080 or 44.7% beers have only 1 review, lets group by total
+reviews &amp; find count for each.</em></p>
+
+<p><br /></p>
+
+<p>Lets create seprate dataframe with frequency of count of reviews</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>review_frequency&lt;-beer_reviews_count %&gt;% group_by(total_beer_reviews) %&gt;% summarise(review_occurance=n())
+
+head(review_frequency,25)
+
+## # A tibble: 25 x 2
+##    total_beer_reviews review_occurance
+##                 &lt;int&gt;            &lt;int&gt;
+##  1                  1            18080
+##  2                  2             6183
+##  3                  3             3079
+##  4                  4             1895
+##  5                  5             1350
+##  6                  6              959
+##  7                  7              785
+##  8                  8              556
+##  9                  9              478
+## 10                 10              401
+## # ... with 15 more rows
+</code></pre>
+</div>
+
+<p>It seems that most beers get very few reviews. Infact very few beers
+have large enough number of reviews required for building recommendation
+system based on collaborative filtering.</p>
+
+<p><br /></p>
+
+<p>Filtering by beers having atleast 50 reviews &amp; users having reviewed
+atleast 30 beers as there are more distinct beers(40308)</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>beer_reviews_count_subset&lt;-subset(beer_reviews_count,beer_reviews_count$total_beer_reviews&gt;=50)
+</code></pre>
+</div>
+
+<p><em>Now we are left with a dataset of these distinct beer ids each having
+more than 50 reviews each.</em></p>
+
+<p><br /></p>
+
+<p>Lets check beer review frequency now</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ggplot(beer_reviews_count_subset,aes(x=total_beer_reviews)) + geom_bar()
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-16-1.png" alt="" /></p>
+
+<p><br /></p>
+
+<p>Lets also filter beer dataset based on users who have atleast reviewd 30
+beers each</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>user_reviews_count&lt;- beer %&gt;% group_by(review_profilename) %&gt;% summarise(total_user_reviews=n())
+user_reviews_count_subset&lt;-subset(user_reviews_count,user_reviews_count$total_user_reviews&gt;=30)
+ggplot(user_reviews_count_subset,aes(x=total_user_reviews)) + geom_bar()
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-17-1.png" alt="" /></p>
+
+<p><br /></p>
+
+<p>Now lets filter original data by these beer and user ids</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>important_beers&lt;-merge(beer,beer_reviews_count_subset,by.x="beer_beerid",by.y="beer_beerid")
+important_beers&lt;-merge(important_beers,user_reviews_count_subset,by.x="review_profilename",by.y="review_profilename")
+
+summary(important_beers)
+
+##       review_profilename  beer_beerid    review_overall total_beer_reviews
+##  BuckeyeNation :   518   Min.   :    5   Min.   :1.00   Min.   : 50.0     
+##  mikesgroove   :   505   1st Qu.: 1089   1st Qu.:3.50   1st Qu.: 97.0     
+##  BEERchitect   :   460   Median : 4161   Median :4.00   Median :171.0     
+##  northyorksammy:   455   Mean   :15774   Mean   :3.87   Mean   :233.8     
+##  WesWes        :   455   3rd Qu.:29619   3rd Qu.:4.50   3rd Qu.:314.0     
+##  TheManiacalOne:   440   Max.   :75086   Max.   :5.00   Max.   :977.0     
+##  (Other)       :227255                                                    
+##  total_user_reviews
+##  Min.   :  30.0    
+##  1st Qu.:  78.0    
+##  Median : 155.0    
+##  Mean   : 233.1    
+##  3rd Qu.: 299.0    
+##  Max.   :1842.0    
+##
+</code></pre>
+</div>
+
+<p><em>This beer subset have substantial ratings by both users &amp; beers.</em></p>
+
+<p><br /></p>
+
+<h4 id="2-convert-this-data-frame-to-a-realratingmatrix-before-you-build-your-collaborative-filtering-models">2. Convert this data frame to a “realratingMatrix” before you build your collaborative filtering models</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>beers_rrmatrix &lt;- as(important_beers[,c(1,2,3)], "realRatingMatrix")
+class(beers_rrmatrix)
+
+## [1] "realRatingMatrix"
+## attr(,"package")
+## [1] "recommenderlab"
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<p>Checking realRatingMatrix</p>
+
+<p>Few reviews by each user</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>head(rowCounts(beers_rrmatrix))
+
+##  0110x011  05Harley 100floods  1759Girl  1fastz28  32hoss32
+##        30        30        29        40        96        26
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<p>Few reviews given to beers</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>head(colCounts(beers_rrmatrix))
+
+##   5   6   7  10  14  15
+##  92 190 147 181  51  45
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<p>Average ratings by few users</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>head(rowMeans(beers_rrmatrix))
+
+##  0110x011  05Harley 100floods  1759Girl  1fastz28  32hoss32
+##  4.333333  4.116667  4.155172  3.725000  3.875000  3.788462
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<p>Converting the matrix to a dataframe</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>beers_df &lt;- as(beers_rrmatrix, "data.frame")
+str(beers_df)
+
+## 'data.frame':    230088 obs. of  3 variables:
+##  $ user  : Factor w/ 3176 levels "0110x011","05Harley",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ item  : Factor w/ 2064 levels "10","100","1002",..: 2039 47 256 263 1165 1750 1925 1955 2007 24 ...
+##  $ rating: num  4 4 4.5 4.5 4.5 4 5 4 5 4 ...
+
+summary(beers_df)
+
+##              user             item            rating    
+##  BuckeyeNation :   518   2093   :   600   Min.   :1.00  
+##  mikesgroove   :   505   412    :   589   1st Qu.:3.50  
+##  BEERchitect   :   460   1904   :   574   Median :4.00  
+##  northyorksammy:   455   1093   :   552   Mean   :3.87  
+##  WesWes        :   455   4083   :   525   3rd Qu.:4.50  
+##  TheManiacalOne:   440   1013   :   515   Max.   :5.00  
+##  (Other)       :227255   (Other):226733
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h3 id="ii-data-exploration">II. Data Exploration:</h3>
+
+<h4 id="1-determine-how-similar-the-first-ten-users-are-with-each-other-and-visualise-it">1. Determine how similar the first ten users are with each other and visualise it</h4>
+
+<p>How similar are the first ten users are with each other</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>similar_users &lt;- similarity(beers_rrmatrix[1:10,],method = "cosine",which = "users")
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<p>Users Similarity matrix</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>kable(as.matrix(similar_users))
+</code></pre>
+</div>
+
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">0110x011</th>
+<th align="right">05Harley</th>
+<th align="right">100floods</th>
+<th align="right">1759Girl</th>
+<th align="right">1fastz28</th>
+<th align="right">32hoss32</th>
+<th align="right">3Vandoo</th>
+<th align="right">4000qtrap</th>
+<th align="right">4DAloveofSTOUT</th>
+<th align="right">51mmz0rz</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0110x011</td>
+<td align="right">0.0000000</td>
+<td align="right">1.0000000</td>
+<td align="right">1.0000000</td>
+<td align="right">NA</td>
+<td align="right">0.9986178</td>
+<td align="right">NA</td>
+<td align="right">1.0000000</td>
+<td align="right">NA</td>
+<td align="right">1.0000000</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr class="even">
+<td>05Harley</td>
+<td align="right">1.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.9982744</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9801961</td>
+<td align="right">NA</td>
+<td align="right">1.0000000</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9986898</td>
+<td align="right">0.8944272</td>
+</tr>
+<tr class="odd">
+<td>100floods</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9982744</td>
+<td align="right">0.0000000</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9986226</td>
+<td align="right">NA</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8106792</td>
+<td align="right">0.9982744</td>
+<td align="right">0.9474403</td>
+</tr>
+<tr class="even">
+<td>1759Girl</td>
+<td align="right">NA</td>
+<td align="right">1.0000000</td>
+<td align="right">1.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.9975295</td>
+<td align="right">NA</td>
+<td align="right">0.9970831</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9970545</td>
+<td align="right">0.9727176</td>
+</tr>
+<tr class="odd">
+<td>1fastz28</td>
+<td align="right">0.9986178</td>
+<td align="right">0.9801961</td>
+<td align="right">0.9986226</td>
+<td align="right">0.9975295</td>
+<td align="right">0.0000000</td>
+<td align="right">0.9959184</td>
+<td align="right">0.9938707</td>
+<td align="right">0.9977852</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9626219</td>
+</tr>
+<tr class="even">
+<td>32hoss32</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">0.9959184</td>
+<td align="right">0.0000000</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr class="odd">
+<td>3Vandoo</td>
+<td align="right">1.0000000</td>
+<td align="right">1.0000000</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9970831</td>
+<td align="right">0.9938707</td>
+<td align="right">NA</td>
+<td align="right">0.0000000</td>
+<td align="right">0.9998377</td>
+<td align="right">NA</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr class="even">
+<td>4000qtrap</td>
+<td align="right">NA</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8106792</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9977852</td>
+<td align="right">NA</td>
+<td align="right">0.9998377</td>
+<td align="right">0.0000000</td>
+<td align="right">0.9969278</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td>4DAloveofSTOUT</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9986898</td>
+<td align="right">0.9982744</td>
+<td align="right">0.9970545</td>
+<td align="right">1.0000000</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">0.9969278</td>
+<td align="right">0.0000000</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td>51mmz0rz</td>
+<td align="right">1.0000000</td>
+<td align="right">0.8944272</td>
+<td align="right">0.9474403</td>
+<td align="right">0.9727176</td>
+<td align="right">0.9626219</td>
+<td align="right">1.0000000</td>
+<td align="right">1.0000000</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">0.0000000</td>
+</tr>
+</tbody>
+</table>
+
+<p><br /></p>
+
+<p>Visualise similarity matrix</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>image(as.matrix(similar_users), main = "User similarity")
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-27-1.png" alt="" /></p>
+
+<p><br /></p>
+
+<h4 id="2-compute-and-visualise-the-similarity-between-the-first-10-beers">2. Compute and visualise the similarity between the first 10 beers</h4>
+
+<p><br /></p>
+
+<p>How similar are the first ten beers are with each other</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>similar_beers &lt;- similarity(beers_rrmatrix[,1:10],method = "cosine",which = "items")
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<p>Items(Beers) Similarity matrix</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>kable(as.matrix(similar_beers))
+</code></pre>
+</div>
+
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">5</th>
+<th align="right">6</th>
+<th align="right">7</th>
+<th align="right">10</th>
+<th align="right">14</th>
+<th align="right">15</th>
+<th align="right">17</th>
+<th align="right">19</th>
+<th align="right">30</th>
+<th align="right">31</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>5</td>
+<td align="right">0.0000000</td>
+<td align="right">0.9726805</td>
+<td align="right">0.9783900</td>
+<td align="right">0.9312075</td>
+<td align="right">0.9933630</td>
+<td align="right">0.9815302</td>
+<td align="right">0.9519402</td>
+<td align="right">0.9607689</td>
+<td align="right">0.9634705</td>
+<td align="right">0.9710609</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td align="right">0.9726805</td>
+<td align="right">0.0000000</td>
+<td align="right">0.9469754</td>
+<td align="right">0.9877854</td>
+<td align="right">0.9542911</td>
+<td align="right">0.9865850</td>
+<td align="right">0.9633901</td>
+<td align="right">0.9653313</td>
+<td align="right">0.9829763</td>
+<td align="right">0.9822110</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td align="right">0.9783900</td>
+<td align="right">0.9469754</td>
+<td align="right">0.0000000</td>
+<td align="right">0.9491052</td>
+<td align="right">0.8717101</td>
+<td align="right">0.9674071</td>
+<td align="right">0.9561002</td>
+<td align="right">0.9323216</td>
+<td align="right">0.9459190</td>
+<td align="right">0.9260756</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td align="right">0.9312075</td>
+<td align="right">0.9877854</td>
+<td align="right">0.9491052</td>
+<td align="right">0.0000000</td>
+<td align="right">0.9615401</td>
+<td align="right">0.9764387</td>
+<td align="right">0.9742800</td>
+<td align="right">0.9852062</td>
+<td align="right">0.9917181</td>
+<td align="right">0.9854066</td>
+</tr>
+<tr class="odd">
+<td>14</td>
+<td align="right">0.9933630</td>
+<td align="right">0.9542911</td>
+<td align="right">0.8717101</td>
+<td align="right">0.9615401</td>
+<td align="right">0.0000000</td>
+<td align="right">0.9934646</td>
+<td align="right">0.9601002</td>
+<td align="right">0.9905018</td>
+<td align="right">0.9894903</td>
+<td align="right">0.9711294</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td align="right">0.9815302</td>
+<td align="right">0.9865850</td>
+<td align="right">0.9674071</td>
+<td align="right">0.9764387</td>
+<td align="right">0.9934646</td>
+<td align="right">0.0000000</td>
+<td align="right">0.9804572</td>
+<td align="right">0.9835829</td>
+<td align="right">0.9948577</td>
+<td align="right">0.9951374</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td align="right">0.9519402</td>
+<td align="right">0.9633901</td>
+<td align="right">0.9561002</td>
+<td align="right">0.9742800</td>
+<td align="right">0.9601002</td>
+<td align="right">0.9804572</td>
+<td align="right">0.0000000</td>
+<td align="right">0.9768746</td>
+<td align="right">0.9744582</td>
+<td align="right">0.9640672</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td align="right">0.9607689</td>
+<td align="right">0.9653313</td>
+<td align="right">0.9323216</td>
+<td align="right">0.9852062</td>
+<td align="right">0.9905018</td>
+<td align="right">0.9835829</td>
+<td align="right">0.9768746</td>
+<td align="right">0.0000000</td>
+<td align="right">0.9893860</td>
+<td align="right">0.9827195</td>
+</tr>
+<tr class="odd">
+<td>30</td>
+<td align="right">0.9634705</td>
+<td align="right">0.9829763</td>
+<td align="right">0.9459190</td>
+<td align="right">0.9917181</td>
+<td align="right">0.9894903</td>
+<td align="right">0.9948577</td>
+<td align="right">0.9744582</td>
+<td align="right">0.9893860</td>
+<td align="right">0.0000000</td>
+<td align="right">0.9884008</td>
+</tr>
+<tr class="even">
+<td>31</td>
+<td align="right">0.9710609</td>
+<td align="right">0.9822110</td>
+<td align="right">0.9260756</td>
+<td align="right">0.9854066</td>
+<td align="right">0.9711294</td>
+<td align="right">0.9951374</td>
+<td align="right">0.9640672</td>
+<td align="right">0.9827195</td>
+<td align="right">0.9884008</td>
+<td align="right">0.0000000</td>
+</tr>
+</tbody>
+</table>
+
+<p><br /></p>
+
+<p>Visualise similarity matrix</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>image(as.matrix(similar_beers), main = "Beer similarity")
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-30-1.png" alt="" /></p>
+
+<p><br /></p>
+
+<h4 id="3-what-are-the-unique-values-of-ratings">3. What are the unique values of ratings?</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>beers_df %&gt;% group_by(rating) %&gt;% summarise(rating_frequency=n()) %&gt;% nrow()
+
+## [1] 9
+</code></pre>
+</div>
+
+<p><em>So 9 distinct ratings, lets check frequency of each rating.</em></p>
+
+<p><br /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>beers_df %&gt;% group_by(rating) %&gt;% summarise(rating_frequency=n())
+
+## # A tibble: 9 x 2
+##   rating rating_frequency
+##    &lt;dbl&gt;            &lt;int&gt;
+## 1    1.0             1120
+## 2    1.5             1343
+## 3    2.0             4474
+## 4    2.5             7012
+## 5    3.0            21189
+## 6    3.5            42543
+## 7    4.0            88240
+## 8    4.5            51086
+## 9    5.0            13081
+</code></pre>
+</div>
+
+<p><em>So rating 4.0 &amp; 4.5 are most common, 1.0 &amp; 1.5 are least common.</em></p>
+
+<p><br /></p>
+
+<h4 id="4-visualise-the-rating-values-and-notice">4. Visualise the rating values and notice:</h4>
+
+<h4 id="i-the-average-beer-ratings">(i) The average beer ratings</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>avg_beer_ratings&lt;-beers_df %&gt;% group_by(item) %&gt;% summarise(average_rating=mean(rating))
+
+colors &lt;- c(rep("red",2), rep("blue",2), rep("green",1))
+ggplot(avg_beer_ratings,aes(x=average_rating)) + geom_histogram() + labs(x="Average Rating", y="Number of Beers") + scale_x_discrete(limits=1:5)
+
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-33-1.png" alt="" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>summary(avg_beer_ratings$average_rating)
+
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+##   1.258   3.656   3.870   3.806   4.043   4.636
+</code></pre>
+</div>
+
+<p><em>So average beer ratings(Mean)=3.898 &amp; Median=3.955, almost normal,
+slightly left skewed.</em></p>
+
+<p><br /></p>
+
+<p>Also checking on original full dataset of beers</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>avg_beer_ratings_all&lt;-beer %&gt;% group_by(beer_beerid) %&gt;% summarise(average_rating=mean(review_overall))
+ggplot(avg_beer_ratings_all,aes(x=average_rating)) + geom_histogram() + labs(x="Average Rating", y="# of Beers")
+
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-34-1.png" alt="" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>summary(avg_beer_ratings_all$average_rating)
+
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+##   0.000   3.500   3.800   3.671   4.000   5.000
+</code></pre>
+</div>
+
+<p><em>So average beer ratings(Mean)=3.8 &amp; Median=4, uneven distribution.</em></p>
+
+<p><br /></p>
+
+<h4 id="ii-the-average-user-ratings">(ii) The average user ratings</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>avg_user_ratings&lt;-beers_df %&gt;% group_by(user) %&gt;% summarise(average_rating=mean(rating))
+ggplot(avg_user_ratings,aes(x=average_rating)) + geom_histogram() + labs(x="Average Rating", y="Number of Users")
+
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-35-1.png" alt="" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>summary(avg_user_ratings$average_rating)
+
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+##   2.833   3.750   3.901   3.875   4.023   4.457
+</code></pre>
+</div>
+
+<p><em>So average beer ratings(Mean)=3.991 &amp; Median=4, slightly left skewed &amp;
+uneven distribution.</em></p>
+
+<p><br /></p>
+
+<h4 id="iii-the-average-number-of-ratings-given-to-the-beers">(iii) The average number of ratings given to the beers</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>avg_beer_reviews&lt;-important_beers %&gt;% group_by(beer_beerid) %&gt;% summarise(average_reviews=mean(total_beer_reviews))
+ggplot(avg_beer_reviews,aes(x=average_reviews)) + geom_histogram() + labs(x="Average Rating", y="Number of Beers")
+
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-36-1.png" alt="" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>summary(avg_beer_reviews$average_reviews)
+
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+##    50.0    68.0    99.0   143.4   168.0   977.0
+</code></pre>
+</div>
+
+<p><em>So on average each beer gets ~143 reviews from chosen subset.</em></p>
+
+<p><br /></p>
+
+<p>Also checking on original full dataset of beers</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>avg_user_ratings_all&lt;-beer_reviews_count %&gt;% group_by(beer_beerid) %&gt;% summarise(average_rating=mean(total_beer_reviews))
+ggplot(avg_user_ratings_all,aes(x=average_rating)) + geom_histogram() + labs(x="Average Rating", y="Number of Users")
+
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-37-1.png" alt="" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>summary(avg_user_ratings_all$average_rating)
+
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+##    1.00    1.00    2.00   11.77    5.00  977.00
+</code></pre>
+</div>
+
+<p><em>So on average each beer gets ~12 reviews.</em></p>
+
+<p><br /></p>
+
+<h4 id="iv-the-average-number-of-ratings-given-by-the-users">(iv) The average number of ratings given by the users</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>avg_user_reviews&lt;-important_beers %&gt;% group_by(review_profilename) %&gt;% summarise(average_reviews=mean(total_user_reviews))
+ggplot(avg_user_reviews,aes(x=average_reviews)) + geom_histogram()
+
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-38-1.png" alt="" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>summary(avg_user_reviews$average_reviews)
+
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+##    30.0    44.0    72.0   120.9   137.2  1842.0
+</code></pre>
+</div>
+
+<p><em>So on average each user gives ~101 reviews, but this distribution is
+very skewed.</em></p>
+
+<p><br /></p>
+
+<p>Also checking on original full dataset of beers</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>avg_user_ratings_all&lt;-user_reviews_count %&gt;% group_by(review_profilename) %&gt;% summarise(average_rating=mean(total_user_reviews))
+ggplot(avg_user_ratings_all,aes(x=average_rating)) + geom_histogram() + labs(x="Average Rating", y="Number of Users")
+
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-39-1.png" alt="" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>summary(avg_user_ratings_all$average_rating)
+
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+##    1.00    1.00    3.00   21.09   11.00 1842.00
+</code></pre>
+</div>
+
+<p><em>So on average each user gives 21 reviews, but this distribution is very
+skewed.</em></p>
+
+<p><br /></p>
+
+<p>Also Visualizing ratings with real rating matrix of beers</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>qplot(getRatings(beers_rrmatrix), binwidth = 1, main = "Histogram of ratings", xlab = "Rating")
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-40-1.png" alt="" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>summary(getRatings(beers_rrmatrix)) #slightly right skewed
+
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+##    1.00    3.50    4.00    3.87    4.50    5.00
+
+qplot(getRatings(normalize(beers_rrmatrix, method = "Z-score")),main = "Histogram of normalized ratings", xlab = "Rating")
+
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-40-2.png" alt="" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>summary(getRatings(normalize(beers_rrmatrix, method = "Z-score"))) # seems better
+
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+## -6.5750 -0.5318  0.1276  0.0000  0.6984  3.2030
+
+qplot(rowCounts(beers_rrmatrix), binwidth = 10,
+      main = "Beers Rated on average", xlab = "# of users", ylab = "# of beers rated")
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-40-3.png" alt="" /></p>
+
+<p>Most users rate less number of beers, very few users have rated more
+beers</p>
+
+<p><br /></p>
+
+<h3 id="iii-recommendation-models">III. Recommendation Models:</h3>
+
+<h4 id="1-divide-your-data-into-training-and-testing-datasets-experiment-with-split-and-cross-validation-evaluation-schemes">1. Divide your data into training and testing datasets, Experiment with ‘split’ and ‘cross-validation’ evaluation schemes</h4>
+
+<p><br /></p>
+
+<ol>
+  <li>Scheme1 with train/test(90/10) using split without cross validation
+&amp; goodRating as 4</li>
+</ol>
+
+<!-- -->
+
+<div class="highlighter-rouge"><pre class="highlight"><code>scheme1 &lt;- evaluationScheme(beers_rrmatrix, method = "split", train = .75,k = 1, given = -1, goodRating = 4)
+scheme1
+
+## Evaluation scheme using all-but-1 items
+## Method: 'split' with 1 run(s).
+## Training set proportion: 0.750
+## Good ratings: &gt;=4.000000
+## Data set: 3176 x 2064 rating matrix of class 'realRatingMatrix' with 230088 ratings.
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<ol>
+  <li>Scheme2 using cross-validation without cross validation(5 folds) &amp;
+goodRating as 4</li>
+</ol>
+
+<!-- -->
+
+<div class="highlighter-rouge"><pre class="highlight"><code>scheme2 &lt;- evaluationScheme(beers_rrmatrix, method = "cross-validation",k = 5, given = -1, goodRating = 4)
+scheme2
+
+## Evaluation scheme using all-but-1 items
+## Method: 'cross-validation' with 5 run(s).
+## Good ratings: &gt;=4.000000
+## Data set: 3176 x 2064 rating matrix of class 'realRatingMatrix' with 230088 ratings.
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h4 id="2-building-ibcf-and-ubcf-models-with-below-hyperparameters">2. Building IBCF and UBCF models with below hyperparameters</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>algorithms &lt;- list(
+  "user-based CF" = list(name="UBCF", param=list(normalize = "Z-score",
+                                                 method="Cosine",
+                                                 nn=30)),
+  "item-based CF" = list(name="IBCF", param=list(normalize = "Z-score")))
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<h4 id="evaluating-algorithms--predicting-next-n-beers">Evaluating algorithms &amp; predicting next n beers</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>results1 &lt;- evaluate(scheme1, algorithms, n=c(1, 3, 5, 10, 15, 20))
+
+## UBCF run fold/sample [model time/prediction time]
+##   1  [0.06sec/10.44sec]
+## IBCF run fold/sample [model time/prediction time]
+##   1  [21.42sec/0.74sec]
+
+class(results1)
+
+## [1] "evaluationResultList"
+## attr(,"package")
+## [1] "recommenderlab"
+
+results2 &lt;- evaluate(scheme2, algorithms, n=c(1, 3, 5, 10, 15, 20))
+
+## UBCF run fold/sample [model time/prediction time]
+##   1  [0.052sec/7.712sec]
+##   2  [0.048sec/7.492sec]
+##   3  [0.052sec/7.88sec]
+##   4  [0.052sec/7.668sec]
+##   5  [0.056sec/7.832sec]
+## IBCF run fold/sample [model time/prediction time]
+##   1  [25.072sec/0.504sec]
+##   2  [24.016sec/0.476sec]
+##   3  [23.268sec/0.492sec]
+##   4  [37.936sec/0.488sec]
+##   5  [36.488sec/0.48sec]
+
+class(results2)
+
+## [1] "evaluationResultList"
+## attr(,"package")
+## [1] "recommenderlab"
+</code></pre>
+</div>
+
+<p><strong>Note:</strong> Evaluate on scheme1 &amp; scheme2 takes around 10 mins on my
+system</p>
+
+<p><br /></p>
+
+<h4 id="3-compare-the-performance-of-the-two-models-and-suggest-the-one-that-should-be-deployed">3. Compare the performance of the two models and suggest the one that should be deployed</h4>
+
+<h4 id="drawing-roc-curve">Drawing ROC curve</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>plot(results1, annotate = 1:4, legend="topleft")
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-45-1.png" alt="" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>plot(results2, annotate = 1:4, legend="topleft")
+</code></pre>
+</div>
+
+<p><img src="/Images/Blog/Beer_Recommendation_System_files/figure-markdown_strict/unnamed-chunk-45-2.png" alt="" /></p>
+
+<p><em>So UBCF seems to get better then IBCF especially with higher values of
+n.</em></p>
+
+<p><br /></p>
+
+<h4 id="4-give-the-names-of-the-top-5-beers-that-you-would-recommend-to-the-users-cokes-genog--giblet">4. Give the names of the top 5 beers that you would recommend to the users “cokes”, “genog” &amp; “giblet”</h4>
+
+<p><br /></p>
+
+<h4 id="making-recomendations-using-ubcf">Making Recomendations using UBCF</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>r &lt;- Recommender(beers_rrmatrix, method = "UBCF")
+r
+
+## Recommender of type 'UBCF' for 'realRatingMatrix'
+## learned using 3176 users.
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>recom_cokes &lt;- predict(r, beers_rrmatrix['cokes'], n=5)
+as(recom_cokes, "list")
+
+## $cokes
+## [1] "7971" "645"  "1346" "582"  "2041"
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>recom_genog &lt;- predict(r, beers_rrmatrix['genog'], n=5)
+as(recom_genog, "list")
+
+## $genog
+## [1] "57908" "1160"  "1093"  "1161"  "1445"
+</code></pre>
+</div>
+
+<p><br /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>recom_giblet &lt;- predict(r, beers_rrmatrix['giblet'], n=5)
+as(recom_giblet, "list")
+
+## $giblet
+## [1] "19960" "4083"  "582"   "11757" "2041"
+</code></pre>
+</div>
+
+<p><br /></p>
+
+      </article>
+
+      
+        <div class="blog-tags">
+          Tags:
+          
+          
+            <a href="/tags#R">R</a>
+          
+            <a href="/tags#Recommendation System">Recommendation System</a>
+          
+          
+        </div>
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+  <!--- Share on Twitter -->
+    <a href="https://twitter.com/intent/tweet?text=Beer+Recommendation+System+http://mohitatgithub.github.io/2018-03-20-Building-a-Beer-Recommendation-System/"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fa fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+
+  
+  <!--- Share on Google Plus -->
+    <a href="https://plus.google.com/share?url=http://mohitatgithub.github.io/2018-03-20-Building-a-Beer-Recommendation-System/"
+      class="btn btn-social-icon btn-google" title="Share on Google+">
+      <span class="fa fa-fw fa-google-plus" aria-hidden="true"></span>
+      <span class="sr-only">Google+</span>
+    </a>
+  
+
+  
+  <!--- Share on LinkedIn -->
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://mohitatgithub.github.io/2018-03-20-Building-a-Beer-Recommendation-System/"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fa fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="/2018-03-08-Titanic-Tragedy-Exploratory-Data-Analysis/" data-toggle="tooltip" data-placement="top" title="Titanic Tragedy: Exploratory Data Analysis">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="/2018-03-25-Mushroom-Classification/" data-toggle="tooltip" data-placement="top" title="Mushroom Classification">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+        <div class="disqus-comments">
+          <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'mohitrathore';
+        /* ensure that pages with query string get the same discussion */
+            var url_parts = window.location.href.split("?");
+            var disqus_url = url_parts[0];
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+
+    <footer>
+  <div class="container beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links"><li><a href="/feed.xml" title="RSS"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">RSS</span>
+              </a>
+            </li><li><a href="mailto:mohitr1729@gmail.com" title="Email me"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Email me</span>
+              </a>
+            </li><li><a href="https://github.com/mohitatgithub" title="GitHub"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">GitHub</span>
+              </a>
+            </li><li><a href="https://linkedin.com/in/mohitr1729" title="LinkedIn"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">LinkedIn</span>
+              </a>
+            </li><li><a href="https://www.kaggle.com/mohitr" title="Kaggle"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-trophy fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Kaggle</span>
+              </a>
+            </li></ul>
+      <p class="copyright text-muted">
+      Mohit Rathore
+      &nbsp;&bull;&nbsp;
+      2019
+
+      
+
+      
+      </p>
+          <!-- Please don't remove this, keep my open source work credited :) -->
+    <p class="theme-by text-muted">
+      Theme by
+      <a href="http://deanattali.com/beautiful-jekyll/">beautiful-jekyll</a>
+    </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+    
+
+
+
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script>
+      	if (typeof jQuery == 'undefined') {
+      	  document.write('<script src="/js/jquery-1.11.2.min.js"></scr' + 'ipt>');
+      	}
+      </script>
+    
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+	<script src="/js/bootstrap.min.js"></script>
+    
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+	<script src="/js/main.js"></script>
+    
+  
+
+
+
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-114904532-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+	<!-- End Google Analytics -->
+
+
+  
+  </body>
+</html>
