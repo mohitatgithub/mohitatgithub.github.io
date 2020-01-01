@@ -224,7 +224,7 @@ text9: The Man Who Was Thursday by G . K . Chesterton 1908
 </code></pre>
 </div>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets check fisrt 100 words from novel</span>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets check first 100 words from novel</span>
 <span class="n">novel</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">99</span><span class="p">]</span>
 
 <span class="c">#Too few words, it seems that its treating every character separately</span>
@@ -318,7 +318,7 @@ text9: The Man Who Was Thursday by G . K . Chesterton 1908
 </code></pre>
 </div>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets sort these words alphabetecally &amp; chek few of them</span>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets sort these words alphabetically &amp; check few of them</span>
 <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">novel</span><span class="p">))[:</span><span class="mi">50</span><span class="p">]</span>
 
 
@@ -534,7 +534,7 @@ delaford.--delaford,--that
 </code></pre>
 </div>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets find frequency of each word in book using NLTK inbuild functions,</span>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets find frequency of each word in book using NLTK inbuilt functions,</span>
 <span class="c">#but for this lets first covert tokens to nltk text format</span>
 <span class="n">text</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
 <span class="nb">type</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
@@ -549,7 +549,7 @@ delaford.--delaford,--that
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Checking Frequency Distributions</span>
 <span class="n">fd</span> <span class="o">=</span> <span class="n">FreqDist</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-<span class="n">fd</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="c">#Checking 50 most frequently occuring words</span>
+<span class="n">fd</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="c">#Checking 50 most frequently occurring words</span>
 
 <span class="c">#Most frequent words are stop words here, lets remove these &amp; check again</span>
 </code></pre>
@@ -1058,7 +1058,7 @@ years year
 <h3 id="sentences--words">Sentences &amp; Words</h3>
 <p>How many words can a sentence have? Some sources say that sentences longer than 25 words aren’t accessible.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets try to find &amp; seprate all sentences in novel</span>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets try to find &amp; separate all sentences in novel</span>
 <span class="kn">from</span> <span class="nn">nltk</span> <span class="kn">import</span> <span class="n">sent_tokenize</span>
 <span class="n">f</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">'SenseAndSensibility.txt'</span><span class="p">,</span><span class="s">'r'</span><span class="p">)</span>
 <span class="n">book</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
@@ -1257,7 +1257,7 @@ be enough to make them completely easy.
 
 <p><img src="/Images/Blog/Sense-and-Sensibility/output_46_0.png" alt="png" /></p>
 
-<h3 id="bulding-a-classifier">Bulding a classifier</h3>
+<h3 id="building-a-classifier">Building a classifier</h3>
 <p>Can we build classifier to predict gender of 4 main protagonists of the novel? I will discuss this in Part 2 of this notebook.</p>
 
       </article>
@@ -1390,11 +1390,17 @@ be enough to make them completely easy.
                 </span>
                 <span class="sr-only">Kaggle</span>
               </a>
+            </li><li><a href="https://www.quora.com/Mohit-Rathore-6" title="Quora"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-question fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Quora</span>
+              </a>
             </li></ul>
       <p class="copyright text-muted">
       Mohit Rathore
       &nbsp;&bull;&nbsp;
-      2019
+      2020
 
       
 

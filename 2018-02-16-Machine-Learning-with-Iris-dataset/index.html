@@ -287,7 +287,7 @@ kable(temp_df,align = 'c',col.names = c('Species','Avg Sepal Length','Avg Sepal 
 </tbody>
 </table>
 
-<h3 id="scatter-plot-between-sepel-length--sepel-width">Scatter plot between Sepel Length &amp; Sepel Width:</h3>
+<h3 id="scatter-plot-between-sepal-length--sepal-width">Scatter plot between Sepal Length &amp; Sepal Width:</h3>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>#plot(iris$SepalLengthCm,iris$SepalWidthCm)
 ggplot(iris, aes(x=SepalLengthCm, y=SepalWidthCm, color=Species)) + geom_point() + labs(title="Scatterplot", x="Sepal Length", y="Sepal Width")
@@ -330,7 +330,7 @@ ggplot(iris, aes(x=SepalLengthCm, y=SepalWidthCm, color=Species)) + geom_point()
 
 <p><img src="/Images/Blog/iris-species_files/figure-markdown_strict/unnamed-chunk-13-1.png" alt="" /></p>
 
-<h3 id="3d-visualisation-with-4-features">3D visualisation with 4 features:</h3>
+<h3 id="3d-visualization-with-4-features">3D visualization with 4 features:</h3>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>colors &lt;- c("#BB0000", "#00FFFF", "#7FFF00")
 colors &lt;- colors[as.numeric(iris$Species)]
@@ -610,7 +610,7 @@ table(svm_pred,test[,c(5)])
 </code></pre>
 </div>
 
-<p><em>Thanks for reviewing my work, I am a novice in data analysis &amp; still
+<p><em>Thanks for reading, I am a novice in data analysis &amp; still
 learning, so please provide your valuable feedback on errors &amp;
 improvements</em></p>
 
@@ -677,6 +677,10 @@ improvements</em></p>
 
       <ul class="pager blog-pager">
         
+        <li class="previous">
+          <a href="/2018-02-15-Mushroom-Classification/" data-toggle="tooltip" data-placement="top" title="Mushroom Classification">&larr; Previous Post</a>
+        </li>
+        
         
         <li class="next">
           <a href="/2018-02-19-Jazz-Musicians-Collaboration-Graph-Analysis/" data-toggle="tooltip" data-placement="top" title="Jazz Musician Collaborations Graph Analysis using NetworkX">Next Post &rarr;</a>
@@ -742,11 +746,17 @@ improvements</em></p>
                 </span>
                 <span class="sr-only">Kaggle</span>
               </a>
+            </li><li><a href="https://www.quora.com/Mohit-Rathore-6" title="Quora"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-question fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Quora</span>
+              </a>
             </li></ul>
       <p class="copyright text-muted">
       Mohit Rathore
       &nbsp;&bull;&nbsp;
-      2019
+      2020
 
       
 

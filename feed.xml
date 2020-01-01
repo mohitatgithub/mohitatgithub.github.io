@@ -7,6 +7,17 @@
     <atom:link href="http://mohitatgithub.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Data Visualizations</title>
+        <description>
+          
+          The purpose of visualization is insight, not pictures. – Ben Shneiderman Visualizing Significant Earthquakes Using Leaflet [Link] [Dataset] Interactive visualizations using leaflet package in R. Took dataset of significant earthquakes between 1965 to 2016 from kaggle. This dataset was compiled by National Earthquake Information Center (NEIC). This dataset includes a...
+        </description>
+        <pubDate>Mon, 25 Jun 2018 05:15:40 +0000</pubDate>
+        <link>http://mohitatgithub.github.io/2018-06-25-Data-Visualizations/</link>
+        <guid isPermaLink="true">http://mohitatgithub.github.io/2018-06-25-Data-Visualizations/</guid>
+      </item>
+    
+      <item>
         <title>Understanding tf-idf with tidytext</title>
         <description>
           
@@ -32,22 +43,11 @@
         <title>MNIST image classification with CNN &amp; Keras</title>
         <description>
           
-          This is Part 2 of a MNIST digit classification notebook. Here I will be using Keras[1] to build a Convolutional Neural network for classifying hand written digits. My previous model achieved accuracy of 98.4%, I will try to reach atleast 99% accuracy using Artificial Neural Networks in this notebook. I...
+          This is Part 2 of a MNIST digit classification notebook. Here I will be using Keras[1] to build a Convolutional Neural network for classifying hand written digits. My previous model achieved accuracy of 98.4%, I will try to reach at least 99% accuracy using Artificial Neural Networks in this notebook....
         </description>
         <pubDate>Wed, 28 Mar 2018 05:15:40 +0000</pubDate>
         <link>http://mohitatgithub.github.io/2018-03-28-MNIST-Image-Classification-with-CNN-&-Keras/</link>
         <guid isPermaLink="true">http://mohitatgithub.github.io/2018-03-28-MNIST-Image-Classification-with-CNN-&-Keras/</guid>
-      </item>
-    
-      <item>
-        <title>Mushroom Classification</title>
-        <description>
-          
-          Image Source About dataset: I took this dataset from kaggle(https://www.kaggle.com/mig555/mushroom-classification/data) though it was originally contributed to the UCI Machine Learning repository nearly 30 years ago. This dataset includes descriptions of hypothetical samples corresponding to 23 species of gilled mushrooms in the Agaricus and Lepiota Family Mushroom drawn from The Audubon...
-        </description>
-        <pubDate>Sun, 25 Mar 2018 05:15:40 +0000</pubDate>
-        <link>http://mohitatgithub.github.io/2018-03-25-Mushroom-Classification/</link>
-        <guid isPermaLink="true">http://mohitatgithub.github.io/2018-03-25-Mushroom-Classification/</guid>
       </item>
     
       <item>
@@ -100,7 +100,7 @@
         <title>Amazon Reviews Sentiment Analysis with TextBlob</title>
         <description>
           
-          This dataset contains product reviews and metadata from Amazon, including 142.8 million reviews spanning May 1996 - July 2014 for variuos product categories. I have analysed dataset of kindle reviews here. import json from textblob import TextBlob import pandas as pd import gzip Data Extraction For this exercise I am...
+          This dataset contains product reviews and metadata from Amazon, including 142.8 million reviews spanning May 1996 - July 2014 for various product categories. I have analyzed dataset of kindle reviews here. import json from textblob import TextBlob import pandas as pd import gzip Data Extraction For this exercise I am...
         </description>
         <pubDate>Fri, 23 Feb 2018 05:15:40 +0000</pubDate>
         <link>http://mohitatgithub.github.io/2018-02-23-Amazon-Reviews-Sentiment-Analysis/</link>
@@ -149,6 +149,17 @@
         <pubDate>Fri, 16 Feb 2018 05:15:40 +0000</pubDate>
         <link>http://mohitatgithub.github.io/2018-02-16-Machine-Learning-with-Iris-dataset/</link>
         <guid isPermaLink="true">http://mohitatgithub.github.io/2018-02-16-Machine-Learning-with-Iris-dataset/</guid>
+      </item>
+    
+      <item>
+        <title>Mushroom Classification</title>
+        <description>
+          
+          Image Source About dataset: I took this dataset from kaggle(https://www.kaggle.com/mig555/mushroom-classification/data) though it was originally contributed to the UCI Machine Learning repository nearly 30 years ago. This dataset includes descriptions of hypothetical samples corresponding to 23 species of gilled mushrooms in the Agaricus and Lepiota Family Mushroom drawn from The Audubon...
+        </description>
+        <pubDate>Thu, 15 Feb 2018 05:15:40 +0000</pubDate>
+        <link>http://mohitatgithub.github.io/2018-02-15-Mushroom-Classification/</link>
+        <guid isPermaLink="true">http://mohitatgithub.github.io/2018-02-15-Mushroom-Classification/</guid>
       </item>
     
   </channel>

@@ -395,18 +395,18 @@ Jack 6
 	<span class="n">sequence</span> <span class="o">=</span> <span class="n">encoded</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
 	<span class="n">sequences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s">'Total Sequences: </span><span class="si">%</span><span class="s">d'</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequences</span><span class="p">))</span>
-<span class="k">print</span><span class="p">(</span><span class="s">'Forst 10 Sequences: '</span><span class="p">,</span><span class="n">sequences</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'First 10 Sequences: '</span><span class="p">,</span><span class="n">sequences</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
 </code></pre>
 </div>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>Total Sequences: 86
-Forst 10 Sequences:  [[3, 4], [4, 1], [1, 5], [5, 2], [2, 6], [6, 7], [7, 3], [3, 4], [4, 1], [1, 8]]
+First 10 Sequences:  [[3, 4], [4, 1], [1, 5], [5, 2], [2, 6], [6, 7], [7, 3], [3, 4], [4, 1], [1, 8]]
 </code></pre>
 </div>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">sequences</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">sequences</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">sequences</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
-<span class="k">print</span><span class="p">(</span><span class="s">"Firt 5 Sequence Outputs"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"First 5 Sequence Outputs"</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">y</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
 
 <span class="n">y</span> <span class="o">=</span> <span class="n">to_categorical</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="n">vocab_size</span><span class="p">)</span>
@@ -415,7 +415,7 @@ Forst 10 Sequences:  [[3, 4], [4, 1], [1, 5], [5, 2], [2, 6], [6, 7], [7, 3], [3
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Firt 5 Sequence Outputs
+<div class="highlighter-rouge"><pre class="highlight"><code>First 5 Sequence Outputs
 [4 1 5 2 6]
 
 Their One Hot encodings:
@@ -665,11 +665,17 @@ None
                 </span>
                 <span class="sr-only">Kaggle</span>
               </a>
+            </li><li><a href="https://www.quora.com/Mohit-Rathore-6" title="Quora"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-question fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Quora</span>
+              </a>
             </li></ul>
       <p class="copyright text-muted">
       Mohit Rathore
       &nbsp;&bull;&nbsp;
-      2019
+      2020
 
       
 

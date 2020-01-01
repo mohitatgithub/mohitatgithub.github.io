@@ -313,7 +313,7 @@ titanic &lt;- rbind(titanic_train, titanic_test)
 </code></pre>
 </div>
 
-<p><em>Thuogh we can use merged datset for EDA but I will use train datset
+<p><em>Though we can use merged dataset for EDA but I will use train dataset
 only for EDA for consistency &amp; simplicity as Survival attribute is
 missing from test data.</em></p>
 
@@ -794,7 +794,7 @@ titanic_train$Embarked &lt;- replace(titanic_train$Embarked, which(titanic_train
 
 <h4 id="feature-engineering"><u>Feature Engineering</u></h4>
 
-<p><em>Dataset contains some attrbutes like Name, Age, SibSp &amp; Parch which can
+<p><em>Dataset contains some attributes like Name, Age, SibSp &amp; Parch which can
 be used effectively if we can extract useful information from these
 using regular expressions &amp; binning.</em></p>
 
@@ -835,7 +835,7 @@ table(titanic_train$FamilySize)
 
 <h4 id="data-preprocessing"><u>Data Preprocessing</u></h4>
 
-<p><em>Most variables in dataset are categorical, here I will update thier
+<p><em>Most variables in dataset are categorical, here I will update their
 names as per data dictionary &amp; data types as factor for simplicity &amp;
 readability. Toggle Code button to see steps.</em></p>
 
@@ -869,7 +869,7 @@ Analysis</em></p>
 <p><strong>Note: For queries related to passenger survival I will use train
 dataset as ‘Survived’ attribute is not available in test &amp; has to be
 predicted using created model. So these observations will not be
-accurate as we don’t have complete data of passengers to analyse here.</strong></p>
+accurate as we don’t have complete data of passengers to analyze here.</strong></p>
 
 <p><br /></p>
 
@@ -1088,7 +1088,7 @@ ylab("Number of Passengers")+xlab("Number of Siblings/Spouse")
 
 <h4 id="10-does-number-of-parentschildren-aboard-titanic-differ-with-passenger-class">10. Does Number of parents/children aboard Titanic differ with Passenger Class?</h4>
 
-<p><em>Like SibSp Class 3 Passengers had more then 3 childrens or large
+<p><em>Like SibSp Class 3 Passengers had more then 3 children or large
 families compared to Class 1 &amp; 2.</em></p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>ggplot(titanic_train, aes(x=Parch,fill=Pclass))+ geom_bar(position = "dodge") + geom_text(stat='count',aes(label=..count..),position = position_dodge(0.9),vjust=-0.2) +
@@ -1312,11 +1312,17 @@ complete dataset of passengers.</em></p>
                 </span>
                 <span class="sr-only">Kaggle</span>
               </a>
+            </li><li><a href="https://www.quora.com/Mohit-Rathore-6" title="Quora"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-question fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Quora</span>
+              </a>
             </li></ul>
       <p class="copyright text-muted">
       Mohit Rathore
       &nbsp;&bull;&nbsp;
-      2019
+      2020
 
       
 

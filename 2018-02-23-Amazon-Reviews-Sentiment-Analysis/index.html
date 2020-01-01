@@ -56,7 +56,7 @@
   
 
    
-  <meta property="og:description" content="This dataset contains product reviews and metadata from Amazon, including 142.8 million reviews spanning May 1996 - July 2014 for variuos product categories. I have analysed dataset of kindle reviews here. import json from textblob import TextBlob import pandas as pd import gzip Data Extraction For this exercise I am...">
+  <meta property="og:description" content="This dataset contains product reviews and metadata from Amazon, including 142.8 million reviews spanning May 1996 - July 2014 for various product categories. I have analyzed dataset of kindle reviews here. import json from textblob import TextBlob import pandas as pd import gzip Data Extraction For this exercise I am...">
   
 
 
@@ -80,7 +80,7 @@
   
 
   
-  <meta name="twitter:description" content="This dataset contains product reviews and metadata from Amazon, including 142.8 million reviews spanning May 1996 - July 2014 for variuos product categories. I have analysed dataset of kindle reviews here. import json from textblob import TextBlob import pandas as pd import gzip Data Extraction For this exercise I am...">
+  <meta name="twitter:description" content="This dataset contains product reviews and metadata from Amazon, including 142.8 million reviews spanning May 1996 - July 2014 for various product categories. I have analyzed dataset of kindle reviews here. import json from textblob import TextBlob import pandas as pd import gzip Data Extraction For this exercise I am...">
   
 
   
@@ -170,7 +170,7 @@
       
 
       <article role="main" class="blog-post">
-        <p>This dataset contains product reviews and metadata from Amazon, including 142.8 million reviews spanning May 1996 - July 2014 for variuos product categories. I have analysed dataset of kindle reviews here.</p>
+        <p>This dataset contains product reviews and metadata from Amazon, including 142.8 million reviews spanning May 1996 - July 2014 for various product categories. I have analyzed dataset of kindle reviews here.</p>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">textblob</span> <span class="kn">import</span> <span class="n">TextBlob</span>
@@ -205,13 +205,13 @@
 </code></pre>
 </div>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets extract all reviews from this datset</span>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets extract all reviews from this dataset</span>
 <span class="n">all_reviews</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">reviews</span><span class="p">)):</span>
     <span class="n">all_reviews</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reviews</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">'reviewText'</span><span class="p">])</span>
 
-<span class="c">#Display firt 5 extracted reviews</span>
+<span class="c">#Display first 5 extracted reviews</span>
 <span class="n">all_reviews</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
 </code></pre>
 </div>
@@ -227,7 +227,7 @@
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Lets count total number of reviews</span>
 <span class="nb">len</span><span class="p">(</span><span class="n">all_reviews</span><span class="p">)</span>
 
-<span class="c">#We have naerly a million reviews on kindle</span>
+<span class="c">#We have nearly a million reviews on kindle</span>
 </code></pre>
 </div>
 
@@ -276,10 +276,10 @@
 </div>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#Building above lists takes a lot of time, lets save them as csv to save time in future</span>
-<span class="n">polarity_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">polarity_list</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">"colummn"</span><span class="p">])</span>
+<span class="n">polarity_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">polarity_list</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">"column"</span><span class="p">])</span>
 <span class="n">polarity_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'polarity_list.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
-<span class="n">subjectivity_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">subjectivity_list</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">"colummn"</span><span class="p">])</span>
+<span class="n">subjectivity_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">subjectivity_list</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">"column"</span><span class="p">])</span>
 <span class="n">subjectivity_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'subjectivity_list.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </code></pre>
 </div>
@@ -625,11 +625,17 @@ I cannot imagine life without IHT. Sorry? 14 more words needed? How about a repe
                 </span>
                 <span class="sr-only">Kaggle</span>
               </a>
+            </li><li><a href="https://www.quora.com/Mohit-Rathore-6" title="Quora"><span class="fa-stack fa-lg" aria-hidden="true">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-question fa-stack-1x fa-inverse"></i>
+                </span>
+                <span class="sr-only">Quora</span>
+              </a>
             </li></ul>
       <p class="copyright text-muted">
       Mohit Rathore
       &nbsp;&bull;&nbsp;
-      2019
+      2020
 
       
 
